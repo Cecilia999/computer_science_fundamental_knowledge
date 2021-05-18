@@ -42,8 +42,8 @@
   - 软件终止：终止进程信号、其他进程调用 kill 函数、软件异常产生信号
 
 ##### 参考：
-[https://blog.csdn.net/weixin_38663899/article/details/86136682](https://blog.csdn.net/weixin_38663899/article/details/86136682)  
-[https://en.wikipedia.org/wiki/Signal_(IPC)](https://en.wikipedia.org/wiki/Signal_(IPC))
+https://blog.csdn.net/weixin_38663899/article/details/86136682  
+https://en.wikipedia.org/wiki/Signal_(IPC)  
 
 ### 4. Message queue 消息队列
 
@@ -62,10 +62,34 @@
 
 ##### 参考：
 
-[https://www.geeksforgeeks.org/ipc-using-message-queues/](https://www.geeksforgeeks.org/ipc-using-message-queues/)
+[https://www.geeksforgeeks.org/ipc-using-message-queues/](https://www.geeksforgeeks.org/ipc-using-message-queues/)  
 [https://blog.csdn.net/yang_yulei/article/details/19772649](https://blog.csdn.net/yang_yulei/article/details/19772649)
 
 ### 5. shared memory 共享内存
+
+- two or more process can access the common memory 多个进程可以可以直接读写同一块内存空间，是最快的可用IPC形式
+- pipe & fifo & message queue vs shared memory:
+  - **pipe/fifo/message queue**
+    - Server reads from the input file.
+    - The server writes this data in a message using pipe/fifo/message queue.
+    - The client reads the data from the IPC channel, again requiring the data to be copied from kernel’s IPC buffer to the client’s buffer.
+    - Finally the data is copied from the client’s buffer.
+    - 一共需要copy4次，2read + 2write
+
+  - **shared memory**
+    - 共享内存则只拷贝两次数据：一次从输入文件到共享内存区，另一次从共享内存区到输出文件
+    - 内核专门留出了一块内存区，可以由需要访问的进程将其映射到自己的私有地址空间。进程就可以直接读写这一块内存而不需要进行数据的拷贝，从而提高效率
+    - 进程之间在共享内存时，并不总是读写少量数据后就解除映射，有新的通信时，再重新建立共享内存区域。而是保持共享区域，直到通信完毕为止
+
+
+##### 参考：
+
+https://www.geeksforgeeks.org/ipc-shared-memory/  
+https://www.cnblogs.com/linuxbug/p/4882776.html
+
+### 6. Semaphore 信号量
+
+
 
 #### 参考文献：
 
