@@ -1,4 +1,4 @@
-###1. Pipe 匿名管道(unnamed pipe)
+1. Pipe 匿名管道(unnamed pipe)
 _ 是 half-duplex 的, 即数据是单向的流动的(full-duplex 是双向的). 如果需要 full-duplex 需要建立两个管道
 _ 实质就是 kernal 的一个缓冲区
 _ 没有名字(路径)所以只能用于有亲缘关系的进程之间(parent/child process)
