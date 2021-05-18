@@ -18,28 +18,32 @@
 - 有名管道阻塞
   - 有名管道在打开时需要确实对方的存在，否则将阻塞 -> 以读方式打开某管道，在此之前必须一个进程以写方式打开管道，否则阻塞
 
-[**匿名管道 vs 有名管道 c 语言实践**](http://blog.chinaunix.net/uid-26833883-id-3227144.html)
+- [**匿名管道 vs 有名管道 c 语言实践**](http://blog.chinaunix.net/uid-26833883-id-3227144.html)
 
-[### 3. 信号(Signal)](https://blog.csdn.net/weixin_38663899/article/details/86136682)
+### [3. 信号(Signal)](https://blog.csdn.net/weixin_38663899/article/details/86136682)
 
 - 信号是 Linux 系统中用于进程间互相通信或者操作的一种机制，信号可以在任何时候发给某一进程，而无需知道该进程的状态。
 - 如果该进程当前并未处于执行状态，则该信号就有内核保存起来，知道该进程回复执行并传递给它为止。
 - 如果一个信号被进程设置为阻塞，则该信号的传递被延迟，直到其阻塞被取消是才被传递给进程。
 - [**Linux 系统中常用信号：**](<https://en.wikipedia.org/wiki/Signal_(IPC)>)
 
-  > SIGHUP：用户从终端注销，所有已启动进程都将收到该进程。系统缺省状态下对该信号的处理是终止进程。
-  > SIGINT：程序终止信号。程序运行过程中，按 Ctrl+C 键将产生该信号。
-  > SIGQUIT：程序退出信号。程序运行过程中，按 Ctrl+\\键将产生该信号。
-  > SIGBUS 和 SIGSEGV：进程访问非法地址。
-  > SIGFPE：运算中出现致命错误，如除零操作、数据溢出等。
-  > SIGKILL：用户终止进程执行信号。shell 下执行 kill -9 发送该信号。
-  > SIGTERM：结束进程信号。shell 下执行 kill 进程 pid 发送该信号。
-  > SIGALRM：定时器信号。
-  > SIGCLD：子进程退出信号。如果其父进程没有忽略该信号也没有处理该信号，则子进程退出后将形成僵尸进程。
+  > SIGHUP：用户从终端注销，所有已启动进程都将收到该进程。系统缺省状态下对该信号的处理是终止进程.  
+  > SIGINT：程序终止信号。程序运行过程中，按 Ctrl+C 键将产生该信号。  
+  > SIGQUIT：程序退出信号。程序运行过程中，按 Ctrl+\\键将产生该信号。   
+  > SIGBUS 和 SIGSEGV：进程访问非法地址。   
+  > SIGFPE：运算中出现致命错误，如除零操作、数据溢出等。  
+  > SIGKILL：用户终止进程执行信号。shell 下执行 kill -9 发送该信号。  
+  > SIGTERM：结束进程信号。shell 下执行 kill 进程 pid 发送该信号。  
+  > SIGALRM：定时器信号。  
+  > SIGCLD：子进程退出信号。如果其父进程没有忽略该信号也没有处理该信号，则子进程退出后将形成僵尸进程。  
 
 - 信号来源
   - 硬件来源：用户按键输入 Ctrl+C 退出、硬件异常如无效的存储访问等
   - 软件终止：终止进程信号、其他进程调用 kill 函数、软件异常产生信号
+
+##### 参考：
+[https://blog.csdn.net/weixin_38663899/article/details/86136682](https://blog.csdn.net/weixin_38663899/article/details/86136682)  
+[https://en.wikipedia.org/wiki/Signal_(IPC)](https://en.wikipedia.org/wiki/Signal_(IPC))
 
 ### 4. Message queue 消息队列
 
@@ -58,14 +62,14 @@
 
 ##### 参考：
 
-    https://www.geeksforgeeks.org/ipc-using-message-queues/
-    https://blog.csdn.net/yang_yulei/article/details/19772649
+[https://www.geeksforgeeks.org/ipc-using-message-queues/](https://www.geeksforgeeks.org/ipc-using-message-queues/)
+[https://blog.csdn.net/yang_yulei/article/details/19772649](https://blog.csdn.net/yang_yulei/article/details/19772649)
 
 ### 5. shared memory 共享内存
 
 #### 参考文献：
 
-    https://www.jianshu.com/p/c1015f5ffa74
-    https://opensource.com/article/19/4/interprocess-communication-linux-channels
-    https://www.guru99.com/inter-process-communication-ipc.html
-    https://www.geeksforgeeks.org/ipc-using-message-queues/
+https://www.jianshu.com/p/c1015f5ffa74
+https://opensource.com/article/19/4/interprocess-communication-linux-channels
+https://www.guru99.com/inter-process-communication-ipc.html
+https://www.geeksforgeeks.org/ipc-using-message-queues/
