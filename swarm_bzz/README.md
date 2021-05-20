@@ -57,7 +57,7 @@ nohup bee start --config /etc/bee/bee.yaml &
    ```
 7. 查看链接的节点数
    ```
-   curl -s http://localhost:1635/peers | jq ‘'.peers | length'
+   curl -s http://localhost:1635/peers | jq '.peers | length'
    ```
 8. 查看网络拓扑
    ```
