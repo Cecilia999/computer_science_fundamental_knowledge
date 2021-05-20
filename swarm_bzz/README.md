@@ -92,6 +92,15 @@ nohup bee start --config /etc/bee/bee.yaml &
     curl -s http://localhost:1635/chequebook/address | jq .chequebookaddress
     ```
 
+### 4. 查看钱包账户
+   获得钱包地址
+   ```
+   sudo bee-get-addr
+   ```
+   ```
+   https://goerli.etherscan.io/address/钱包地址
+   ```
+
 ### 参考教程：
 
 * 官方文档：https://docs.ethswarm.org/docs/installation/quick-start#macos-1  
