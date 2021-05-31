@@ -21,27 +21,27 @@ Enough space to store the current Lotus chain (preferably on an SSD storage medi
 
 `sudo apt install mesa-opencl-icd ocl-icd-opencl-dev gcc git bzr jq pkg-config curl clang build-essential hwloc libhwloc-dev wget -y && sudo apt upgrade -y`
 
-**安装 Rustup**
+**安装 Rustup**  
 
 `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh `
 
-安装完成执行命令:
+安装完成执行命令:   
 `source $HOME/.cargo/env`
 
 **安装 Go**
 
 国外:  
-`wget -c https://golang.org/dl/go1.15.5.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local`
-国内:  
+`wget -c https://golang.org/dl/go1.15.5.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local`   
+国内:     
 `wget -c https://studygolang.com/dl/golang/go1.15.8.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local`
 
-**安装完成后的处理:**
-`vi /etc/profile`
-在最后一行加入:
+**安装完成后的处理:**  
+`vi /etc/profile`   
+在最后一行加入:    
 
 `export PATH=$PATH:/usr/local/go/bin source /etc/profile`
 
-**安装 Lotus**
+**安装 Lotus**   
 国内安装 Lotus 须执行下面:
 
 ```
@@ -56,12 +56,17 @@ git clone https://github.com/filecoin-project/lotus.git
 cd lotus
 ```
 
-编辑文件:`vi /etc/sudoers`
-修改为:`Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/local/go/bin"`
+编辑文件:
 
-make clean all sudo make install
+`vi /etc/sudoers`   
 
-**启动 Lotus**
+修改为:
+
+`Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/usr/local/go/bin"`  
+
+`make clean all sudo make install`
+
+**启动 Lotus**    
 启动 Lotus 前须执行下面，修改 Lotus 存储:
 
 ```
@@ -78,9 +83,9 @@ nohup lotus daemon > /filecoin/logs/lotus.log 2>&1 &
 watch lotus sync status
 ```
 
-参考
-[Lotus: install and setup](https://docs.filecoin.io/get-started/lotus/installation/)
-[lotus-miner init 一直卡在 Waiting for confirmation](https://github.com/shannon-6block/lotus-miner/issues/61)
-[Filecoin 代码编译部署常见问题 ](https://zhuanlan.zhihu.com/p/240840245)
-[如何计算 Filecoin 挖矿成本及收益?](https://news.huoxing24.com/20210106104441620102.html)
-[Filecoin 密封流程](https://www.jianshu.com/p/deb34def9ef9)
+**参考**    
+[Lotus: install and setup](https://docs.filecoin.io/get-started/lotus/installation/)  
+[lotus-miner init 一直卡在 Waiting for confirmation](https://github.com/shannon-6block/lotus-miner/issues/61)  
+[Filecoin 代码编译部署常见问题 ](https://zhuanlan.zhihu.com/p/240840245)  
+[如何计算 Filecoin 挖矿成本及收益?](https://news.huoxing24.com/20210106104441620102.html)  
+[Filecoin 密封流程](https://www.jianshu.com/p/deb34def9ef9)   
