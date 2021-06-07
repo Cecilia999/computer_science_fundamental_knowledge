@@ -76,22 +76,28 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 1. 原理：
    1）C++由构造函数 allocate object in heap(堆) and has a pointer in stack(栈) point to it. 当程序结束的时候跑析构函数(destructor)把 heap memory 释放&stack pt point to null.
+
    2） Java 没有析构函数而是由 garbage collector 来实现垃圾回收. GC 会 scan heap 然后释放没有 pointer 指向和没有被 reference(引用)的 object.
+
    3） JVM 控制 GC, 当 JVM 发现 memory is low 的时候会 run garbage collector.
-   4） 强引用(strong ref): 永远不会被 GC
-   软引用(soft ref): 内存溢出的时候回收
-   弱引用(weak ref): 第二次垃圾回收的时候回收
+
+   4） 强引用(strong ref): 永远不会被 GC  
+   软引用(soft ref): 内存溢出的时候回收  
+   弱引用(weak ref): 第二次垃圾回收的时候回收  
    虚引用(phantom ref): 每次垃圾回收的时候回收, 无法通过引用取到对象值
 
 2. 算法：
-   1） 标记-清除算法(mark-sweep): 扫两次，一次标记，一次清除
+   1） 标记-清除算法(mark-sweep): 扫两次，一次标记，一次清除  
    缺点是会产生碎片化的内存导致需要 allocate 一个很大的对象时可能找不到足够大的一块内存只能再次垃圾回收。
-   2） 复制算法(copying): 把一块内存分成相同大的两块, 每次内存空间用完了就垃圾回收把还存活的重新整理复制到另外一边。不会导致内存碎片化，实现简单
+
+   2） 复制算法(copying): 把一块内存分成相同大的两块, 每次内存空间用完了就垃圾回收把还存活的重新整理复制到另外一边。不会导致内存碎片化，实现简单  
    缺点是内存变成了原来的一半，而且如果对象的存活率很高的话要复制的东西很多
+
    3） 标记-整理算法(mark-compact):
    标记可回收，然后全部整理到内存的一边，清除剩下的位置，实现比复制算法要难一点(pointer 位置的整理
+
    4） 分区算法：
    把内存分成 n 个小的独立空间，独立进行垃圾回收而不是每次都垃圾回收整个内存
 
-   评价垃圾回收算法的好坏：吞吐量(throughput) & 停顿时间(pause times)
+   _评价垃圾回收算法的好坏_：吞吐量(throughput) & 停顿时间(pause times)
    吞吐量越大，停顿时间越小的算法越优
