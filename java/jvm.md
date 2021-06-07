@@ -8,10 +8,10 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-- class loader:
-  每一个 Java 虚拟机都由一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
+1. **- class loader:**
+   每一个 Java 虚拟机都由一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
 
-  ![Alt text](../image/class_loader.jpg)
+![Alt text](../image/class_loader.jpg)
 
 1）Bootstrap ClassLoader
 
@@ -29,24 +29,24 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 属于应用程序根据自身需要自定义的 ClassLoader，如 tomcat、jboss 都会根据 j2ee 规范自行实现 ClassLoader 加载过程中会先检查类是否被已加载，检查顺序是自底向上，从 Custom ClassLoader 到 BootStrap ClassLoader 逐层检查，只要某个 classloader 已加载就视为已加载此类，保证此类只所有 ClassLoader 加载一次。而加载的顺序是自顶向下，也就是由上层来逐层尝试加载此类。
 
-- runtime data area
+2. **- runtime data area**
 
-  - Java 堆（Heap）
-    　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
-    包含了 Young Generation + old gen
-  - 方法区（Method Area）
-    　　线程共享，它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。
+- Java 堆（Heap）
+  　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
+  包含了 Young Generation + old gen
+- 方法区（Method Area）
+  　　线程共享，它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。
 
-  - 程序计数器（Program Counter Register）
-    　　线程私有，是一块较小的内存空间，它的作用可以看做是当前线程所执行的字节码的行号指示器。
+- 程序计数器（Program Counter Register）
+  　　线程私有，是一块较小的内存空间，它的作用可以看做是当前线程所执行的字节码的行号指示器。
 
-  - JVM 栈（JVM Stacks）
-    　　线程私有，生命周期与线程相同。
-    虚拟机栈描述的是 Java 方法执行的内存模型：每个方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于存储局部变量表、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。
+- JVM 栈（JVM Stacks）
+  　　线程私有，生命周期与线程相同。
+  虚拟机栈描述的是 Java 方法执行的内存模型：每个方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于存储局部变量表、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。
 
-  - 本地方法栈（Native Method Stacks）
-    　　线程私有，与虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行 Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的 Native 方法服务。
-    _PS: Native Method 就是一个 java 调用非 java 代码的接口_
+- 本地方法栈（Native Method Stacks）
+  　　线程私有，与虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行 Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的 Native 方法服务。
+  _PS: Native Method 就是一个 java 调用非 java 代码的接口_
 
 ### 3. JVM 的对象分配规则
 
