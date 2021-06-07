@@ -22,4 +22,4 @@ springboot initializer: https://start.spring.io/
 
    The internal architecture of JVM contains classloader, memory area, execution engine etc.
    jvm 的结构：
-   ![Alt text](image/截屏2021-06-07上午11.40.02?raw=true "Title")
+   ![Alt text](../image/截屏2021-06-07上午11.40.02.jpg)
