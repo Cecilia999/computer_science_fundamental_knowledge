@@ -101,3 +101,24 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
    _评价垃圾回收算法的好坏_：吞吐量(throughput) & 停顿时间(pause times)
    吞吐量越大，停顿时间越小的算法越优
+
+3. jvm 如何知道那些对象需要回收 ？
+
+- 引用计数法：  
+  每个对象上都有一个引用计数，对象每被引用一次，引用计数器就+1，对象引用被释放，引用计数器-1，直到对象的引用计数为 0，对象就标识可以回收  
+  但是这个算法有明显的缺陷，对于循环引用的情况下，循环引用的对象就不会被回收。例如下图：对象 A，对象 B 循环引用，没有其他的对象引用 A 和 B，则 A 和 B 都不会被回收。
+- root 搜索算法：  
+  这种算法目前定义了几个 root，也就是这几个对象是 jvm 虚拟机不会被回收的对象，所以这些对象引用的对象都是在使用中的对象，这些对象未使用的对象就是即将要被回收的对象。简单就是说：如果对象能够达到 root，就不会被回收，如果对象不能够达到 root，就会被回收。
+
+  以下对象会被认为是 root 对象：
+
+  - 被启动类(bootstrap 加载器)加载的类和创建的对象
+  - jvm 运行时方法区类静态变量(static)引用的对象
+  - jvm 运行时方法去常量池引用的对象
+  - jvm 当前运行线程中的虚拟机栈变量表引用的对象
+  - 本地方法栈中(jni)引用的对象
+
+### 参考
+
+- https://mp.weixin.qq.com/s?__biz=MzI4NDY5Mjc1Mg==&mid=2247484038&idx=1&sn=e083cc8b248461c8916a819119b059c3&chksm=ebf6daf9dc8153ef27ecd857e6cc85372735e84042679c133892d0993074371a46dd2c28b8b3&scene=21#wechat_redirect
+- https://blog.csdn.net/weixin_39611072/article/details/114237961
