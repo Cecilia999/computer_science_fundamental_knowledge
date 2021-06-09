@@ -8,7 +8,7 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-1. **- class loader:**
+1. **class loader:**  
    每一个 Java 虚拟机都由一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
 
 ![Alt text](../image/class_loader.jpg)
@@ -29,7 +29,7 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 属于应用程序根据自身需要自定义的 ClassLoader，如 tomcat、jboss 都会根据 j2ee 规范自行实现 ClassLoader 加载过程中会先检查类是否被已加载，检查顺序是自底向上，从 Custom ClassLoader 到 BootStrap ClassLoader 逐层检查，只要某个 classloader 已加载就视为已加载此类，保证此类只所有 ClassLoader 加载一次。而加载的顺序是自顶向下，也就是由上层来逐层尝试加载此类。
 
-2. **- runtime data area**
+2. **runtime data area**
 
 - Java 堆（Heap）
   　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
