@@ -114,7 +114,7 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
   - 被启动类(bootstrap 加载器)加载的类和创建的对象
   - jvm 运行时方法区类静态变量(static)引用的对象
-  - jvm 运行时方法去常量池引用的对象
+  - jvm 运行时方法区常量池引用的对象
   - jvm 当前运行线程中的虚拟机栈变量表引用的对象
   - 本地方法栈中(jni)引用的对象
 
