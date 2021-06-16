@@ -15,40 +15,57 @@
 
 进程 = 线程 + Memory (typically some region of virtual memory) _逻辑内存_ +file descriptor/handles(windows) _文件/网络句柄_
 
-- “内存”：    
+- “内存”：  
   我们通常所理解的内存是我们所见到的(2G/4G/8G/16G)物理内存，这里的内存是逻辑内存。指的是内存的寻址空间。每个进程的内存是相互独立的。（否则：我们把指针的值改一改就指向其他进程的内存了，通过这样我们岂不是就可以看到其他进程中"微信"或者是"网上银行"的信息）
 
-- “文件/网络句柄”     
+- “文件/网络句柄”  
   它们是所有的进程所共有的，例如打开同一个文件，去抢同一个网络的端口这样的操作是被允许的。
 
 ### 3. 线程的结构 = (栈+PC+TLS)
 
-- 栈    
+- 栈  
   用来储存函数的参数和返回的地址
 
-- Program Counter    
+- Program Counter  
   操作系统真正运行的是一个个的线程， 而我们的进程只是它的一个容器 每个线程都有一串自己的指针，去指向自己当前所在内存的指针
 
-- TLS **(thread local storage)**      
+- TLS **(thread local storage)**  
   线程自己独立的内存
 
 ### 4. 线程的通信方式 -->> 主要用于线程的同步
 
-- 互斥锁 Mutual exclusion (Mutex)    
+- 互斥锁 Mutual exclusion (Mutex)  
   防止多线程同时读写同一块区域，保证资源独占
 
-- 信号量 semophore    
+- 信号量 semophore  
   允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。一旦大于限制的数量，其他线程只能等待
 
-- 信号 signal     
+- 信号 signal  
   通过通知操作的方式来保持多线程同步，还可以方便的实现多线程优先级的比较操作。
 
 参考：线程同步的几种方式->https://www.cnblogs.com/sherlock-lin/p/14538083.html
 
 ### 5. [进程的通信方式](interprocess_communication.md)
 
+### 6. 进程有哪几种状态？
+
+**It is important to realize that only one process can be running on any processor at any instant. Many processes may be ready and waiting**
+
+![Alt text](../image/进程五态模型.jpg)
+
+- 就绪状态：就绪态指的是可运行，但因为其他进程正在运行而处于就绪状态，the process is waited to be assigned to a processor
+- 运行状态：运行态指的就是进程实际占用 CPU 时间片运行时
+- 阻塞状态：阻塞态又被称为睡眠态，它指的是进程不具备运行条件，正在等待被 CPU 调度。
+
+- 新建态：进程的新建态就是进程刚创建出来的时候
+  - 创建进程需要两个步骤：即为新进程分配所需要的资源和空间，设置进程为就绪态，并等待调度执行。
+- 终止态：进程的终止态就是指进程执行完毕，到达结束点，或者因为错误而不得不中止进程。
+  - 终止一个进程需要两个步骤：先等待操作系统或相关的进程进行善后处理。然后回收占用的资源并被系统删除。
+
+### 7. [process scheduling 进程调度](process_scheduling.md)
+
 ### 参考
 
-- 线程与进程简单的解释： http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html    
-- 线程与进程的联系：https://juejin.cn/post/6844903801321685000   
-- Processes and Threads：http://www.qnx.com/developers/docs/6.4.1/neutrino/getting_started/s1_procs.html   
+- 线程与进程简单的解释： http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html
+- 线程与进程的联系：https://juejin.cn/post/6844903801321685000
+- Processes and Threads：http://www.qnx.com/developers/docs/6.4.1/neutrino/getting_started/s1_procs.html

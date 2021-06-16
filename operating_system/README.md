@@ -2,7 +2,8 @@
 
 1. [Process vs Thread 线程和进程](process_thread.md)
 2. [IPC - InterProcess Communication 进程通信](interprocess_communication.md)
-3. [Linux](linux.md)
+3. [Process scheduling 进程调度](process_scheduling.md)
+4. [Linux](linux.md)
 
 ## 常见面试题
 
