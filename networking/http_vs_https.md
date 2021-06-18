@@ -25,17 +25,17 @@
   - status code includes:
     - 200 OK
     - 301 Moved Permanently 为了完成请求，客户端需要进一步细化请求。例如，请求的资源已经移动到一个新的地址
-    - 400 Bad Request 客户端请求有误
+    - 400 Bad Request 客户端请求有误. [例如 http1.1 没有 hostname](https://github.com/Cecilia999/interview/blob/main/networking/http_vs_https.md#3-http-10-vs-11-vs-20)
     - 404 Not Found 请求的 document 不存在
     - 500 Server Internal Error 服务端出现错误
 - six header lines
 
   - header lines includes:
-    > Connection: close
-    > Date: Tue, 18 Aug 2015 15:44:04 GMT
-    > Server: Apache/2.2.3 (CentOS)
-    > Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT
-    > Content-Length: 6821
+    > Connection: close  
+    > Date: Tue, 18 Aug 2015 15:44:04 GMT  
+    > Server: Apache/2.2.3 (CentOS)  
+    > Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT  
+    > Content-Length: 6821  
     > Content-Type: text/html
 
 - entity body
@@ -59,19 +59,20 @@
    - hostname  
      在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname），HTTP1.0 没有 host 域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都支持 host 域，且请求消息中如果没有 host 域会报告一个错误（400 Bad Request）。
 
-   - 缓存处理
-     在 HTTP1.0 中主要使用 header 里的 If-Modified-Since,Expires 来做为缓存判断的标准，HTTP1.1 则引入了更多的缓存控制策略例如 Entity tag，If-Unmodified-Since, If-Match, If-None-Match 等更多可供选择的缓存头来控制缓存策略。
-   - 错误通知的管理
+   - 缓存处理  
+     HTTP1.0 中主要使用 header 里的 If-Modified-Since,Expires 来做为缓存判断的标准  
+     **HTTP1.1 引入了更多的缓存控制策略**, 例如 Entity tag，If-Unmodified-Since, If-Match, If-None-Match 等更多可供选择的缓存头来控制缓存策略。
+   - 错误通知的管理  
      增加了更多错误状态响应码
 
 3. http 2.0
 
-   - multiplexing 多路复用
+   - multiplexing 多路复用  
      支持同一个连接并发处理多个请求.  
-     _原来是同一个 TCP 连接里面，上一个回应（response）发送完了，服务器才能发送下一个, 现在可以多个回应一起发送。_
-   - 头部数据压缩
+     **原来是同一个 TCP 连接里面，上一个回应（response）发送完了，服务器才能发送下一个, 现在可以多个回应一起发送。**
+   - 头部数据压缩  
      1.1 只压缩 entity body，不支持 header 的数据压缩。2.0 压缩 header 数据体积小了，在网络上传输就会更快。
-   - server push 服务器推送
+   - server push 服务器推送  
      ![Alt text](../image/http_server_push.jpg)
 
      服务端推送是一种在客户端请求之前发送数据的机制。  
