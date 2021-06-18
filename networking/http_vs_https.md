@@ -102,9 +102,8 @@
 
 1. https 协议需要到 CA 申请证书。
 2. http 是超文本传输协议，信息是明文传输；https 则是具有安全性的 ssl 加密传输协议。
-3. http 和 https 使用的是完全不同的连接方式，用的端口也不一样，前者是 80，后者是 443。
-4. http 的连接很简单，是无状态的；HTTPS 协议是由 SSL/TSL+HTTP 协议构建的可进行加密传输、身份认证的网络协议，比 http 协议安全。
-5. http 默认使用 80 端口，https 默认使用 443 端口
+3. http 和 https 使用的是完全不同的连接方式，用的端口也不一样，http 默认使用 80 端口，https 默认使用 443 端口
+4. http 的连接很简单，是无状态的；HTTPS 协议是由 SSL/TLS+HTTP 协议构建的可进行加密传输、身份认证的网络协议，比 http 协议安全。
 
 ![Alt text](../image/https.jpg)
 
@@ -144,11 +143,11 @@
 
 1. 什么是 SSL？ - Secure Socket Layer
 
-SSL 协议位于 TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。  
-SSL 协议可分为两层：
+   SSL 协议位于 TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。  
+   SSL 协议可分为两层：
 
-- **SSL 记录协议（SSL Record Protocol）**：它建立在可靠的传输协议（如 TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。
-- **SSL 握手协议（SSL Handshake Protocol）**：它建立在 SSL 记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
+   - **SSL 记录协议（SSL Record Protocol）**：它建立在可靠的传输协议（如 TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。
+   - **SSL 握手协议（SSL Handshake Protocol）**：它建立在 SSL 记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
 
 ![Alt text](../image/ssl_handshake2.jpg)
 ![Alt text](../image/ssl_handshake.jpg)
