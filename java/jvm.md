@@ -1,15 +1,22 @@
+# java virtual machine
+
 ### 1. 什么是 jvm
 
-是 java 虚拟机，用来解析和运行 java 程序。Java 语言在不同平台上运行时不需要重新编译。Java 语言使用 Java 虚拟机屏蔽了与具体平台相关的信息，使得 Java 语言编译程序只需生成在 Java 虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行
+- Java 虚拟机（JVM）是运行 Java 程序的软件环境，用于解析和运行 java 程序。
+- 在运行 Java 程序时，Java 源文件被编译成字节码文件(.class file)后，会启动 JVM，然后由它来负责解析和执行 字节码文件，最终形成 JVM 可以直接使用的 Java 类型的过程。
+- JVM 把 Java 字节码程序和具体的硬件平台以及操作系统环境分隔开来，只要在不同的计算机上安装了针对特定平台的 JVM，Java 程序就可以运行，而不用考虑当前具体的硬件平台及操作系统环境，也不用考虑字节码文件是在何种平台上生成的。
+- Java 解释器 (execute engine)是 Java 虚拟机的一部分。
 
-The internal architecture of JVM contains classloader, memory area, execution engine etc.
+> note：Java 程序通过 JVM 可以实现跨平台特性，但 JVM 是不跨平台的。也就是说，不同操作系统之上的 JVM 是不同的，Windows 平台之上的 JVM 不能用在 Linux 平台，反之亦然。
 
 ### 2. jvm 的结构：
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-**1. class loader:**  
- 每一个 Java 虚拟机都有一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
+**1. class loader:**
+
+- 每一个 Java 虚拟机都有一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。
+- JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
 
 ![Alt text](../image/class_loader.jpg)
 
@@ -120,5 +127,6 @@ The internal architecture of JVM contains classloader, memory area, execution en
 
 ### 参考
 
+- oracle 文档： https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-1.html
 - https://mp.weixin.qq.com/s?__biz=MzI4NDY5Mjc1Mg==&mid=2247484038&idx=1&sn=e083cc8b248461c8916a819119b059c3&chksm=ebf6daf9dc8153ef27ecd857e6cc85372735e84042679c133892d0993074371a46dd2c28b8b3&scene=21#wechat_redirect
 - https://blog.csdn.net/weixin_39611072/article/details/114237961

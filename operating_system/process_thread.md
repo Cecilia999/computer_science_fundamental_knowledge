@@ -64,6 +64,15 @@
 
 ### 7. [process scheduling 进程调度](process_scheduling.md)
 
+### 8. 常用 linux 查看进程/线程状态的命令行
+
+1. ps
+
+   **ps 命令行的 documentation page**: https://man7.org/linux/man-pages/man1/ps.1.html
+
+   1. ` ps -a - 列出所有运行中/激活进程`
+   2.
+
 ### 参考
 
 - 线程与进程简单的解释： http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html
