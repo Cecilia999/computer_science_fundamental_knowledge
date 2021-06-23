@@ -13,30 +13,9 @@
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-**1. class loader:**
+#### 1. [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
 
-- 每一个 Java 虚拟机都有一个类加载器子系统（class loader subsystem），负责加载程序中的类型（类和接口），并赋予唯一的名字。每一个 Java 虚拟机都有一个执行引擎（execution engine）负责执行被加载类中包含的指令。
-- JVM 的两种类装载器包括：启动类装载器和用户自定义类装载器，启动类装载器是 JVM 实现的一部分，用户自定义类装载器则是 Java 程序的一部分，必须是 ClassLoader 类的子类。
-
-![Alt text](../image/class_loader.jpg)
-
-1）Bootstrap ClassLoader
-
-负责加载$JAVA_HOME 中 jre/lib/rt.jar 里所有的 class，由 C++实现，不是 ClassLoader 子类
-
-2）Extension ClassLoader
-
-负责加载 java 平台中扩展功能的一些 jar 包，包括$JAVA_HOME 中 jre/lib/\*.jar 或-Djava.ext.dirs 指定目录下的 jar 包
-
-3）App ClassLoader
-
-负责记载 classpath 中指定的 jar 包及目录中 class
-
-4）Custom ClassLoader
-
-属于应用程序根据自身需要自定义的 ClassLoader，如 tomcat、jboss 都会根据 j2ee 规范自行实现 ClassLoader 加载过程中会先检查类是否被已加载，检查顺序是自底向上，从 Custom ClassLoader 到 BootStrap ClassLoader 逐层检查，只要某个 classloader 已加载就视为已加载此类，保证此类只所有 ClassLoader 加载一次。而加载的顺序是自顶向下，也就是由上层来逐层尝试加载此类。
-
-**2. runtime data area**
+#### 2. runtime data area
 
 - Java 堆（Heap）
   　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
@@ -127,6 +106,6 @@
 
 ### 参考
 
-- oracle 文档： https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-1.html
-- https://mp.weixin.qq.com/s?__biz=MzI4NDY5Mjc1Mg==&mid=2247484038&idx=1&sn=e083cc8b248461c8916a819119b059c3&chksm=ebf6daf9dc8153ef27ecd857e6cc85372735e84042679c133892d0993074371a46dd2c28b8b3&scene=21#wechat_redirect
-- https://blog.csdn.net/weixin_39611072/article/details/114237961
+- oracle 文档： https://docs.oracle.com/javase/specs/jvms/se7/html/index.html
+- https://zzero049.github.io/Blog/#/backend/java/java高级/JVM/01JVM概述
+- 虚拟机浅谈：解释器，树遍历解释器，基于栈与基于寄存器，大杂烩 https://www.iteye.com/blog/rednaxelafx-492667
