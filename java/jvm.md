@@ -1,6 +1,6 @@
 # java virtual machine
 
-## 什么是 jvm
+## 1. 什么是 jvm
 
 - Java 虚拟机（JVM）是运行 Java 程序的软件环境，用于解析和运行 java 程序。
 - 在运行 Java 程序时，Java 源文件被编译成字节码文件(.class file)后，会启动 JVM，然后由它来负责解析和执行 字节码文件，最终形成 JVM 可以直接使用的 Java 类型的过程。
@@ -9,13 +9,13 @@
 
 > note：Java 程序通过 JVM 可以实现跨平台特性，但 JVM 是不跨平台的。也就是说，不同操作系统之上的 JVM 是不同的，Windows 平台之上的 JVM 不能用在 Linux 平台，反之亦然。
 
-## jvm 的结构：
+## 2. jvm 的结构：
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-### [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
+### 1.1 [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
 
-### runtime data area
+### 1.2 runtime data area
 
 - Java 堆（Heap）
   　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
@@ -34,7 +34,7 @@
   　　线程私有，与虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行 Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的 Native 方法服务。
   _PS: Native Method 就是一个 java 调用非 java 代码的接口_
 
-## JVM 的对象分配规则
+## 3. JVM 的对象分配规则
 
 - Young Generation（新生代）：  
   分为：Eden 区和 Survivor 区，Survivor 区有分为大小相等的 From Space 和 To Space。
@@ -58,7 +58,7 @@
 
 4. 每次进行 Minor GC 时，JVM 会计算 Survivor 区移至老年区的对象的平均大小，如果这个值大于老年区的剩余值大小则进行一次 Full GC ->> 空间分配担保
 
-## jvm 垃圾回收
+## 4. jvm 垃圾回收
 
 1. 原理：
    1）C++由构造函数 allocate object in heap(堆) and has a pointer in stack(栈) point to it. 当程序结束的时候跑析构函数(destructor)把 heap memory 释放&stack pt point to null.
