@@ -316,14 +316,15 @@ public class LoaderPathTest {
 ### 1.7 ClassLoader 类
 
 ClassLoader 类，它是一个抽象类；其后所有的类加载器都继承自 ClassLoader（不包括启动类加载器）
-| 方法名称 ｜ 描述｜
-| ---- | -- |
-|getParent() ｜ 返回该类加载器的父类加载器 |
-|loadClass(String name) ｜ 加载名称为 name 的类，返回结果为 java.lang.Class 类的实例 |
-|findClass(String name) ｜ 查找名称为 name 的类，返回结果为 java.lang.Class 类的实例（和 defineClass 搭配使用） |
-| findLoaderClass(String name) ｜ 查找名称为 name 的已经被加载过的类，返回结果为 java.lang.Class 类的实例 |
-| defineClass(String name,byte[] b,int off,int len) ｜ 把字节数组 b 的内容转换为一个 Java 类，返回结果为 java.lang.Class 类的实例 |
-| resolveClass(Class<?> c) | 连接指定一个 Java 类 |
+
+| 方法名称                                          | 描述                                                                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| getParent()                                       | 返回该类加载器的父类加载器                                                           |
+| loadClass(String name)                            | 加载名称为 name 的类，返回结果为 java.lang.Class 类的实例                            |
+| findClass(String name)                            | 查找名称为 name 的类，返回结果为 java.lang.Class 类的实例（和 defineClass 搭配使用） |
+| findLoaderClass(String name)                      | 查找名称为 name 的已经被加载过的类，返回结果为 java.lang.Class 类的实例              |
+| defineClass(String name,byte[] b,int off,int len) | 把字节数组 b 的内容转换为一个 Java 类，返回结果为 java.lang.Class 类的实例           |
+| resolveClass(Class<?> c)                          | 连接指定一个 Java 类                                                                 |
 
 ## 参考
 
