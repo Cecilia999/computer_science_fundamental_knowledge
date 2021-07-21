@@ -1,4 +1,4 @@
-# 类加载的过程/机制 + jvm class loader类加载器
+# 类加载的过程/机制 + jvm class loader 类加载器
 
 ## 类加载的过程/机制
 
@@ -115,53 +115,54 @@ _JAVA 本身是相对安全的语言(相对 c/c++), 如果使用纯粹的 java �
 
 初始化阶段,才真正开始执行类中定义的 java 程序代码。
 
-初始化阶段是执行 类构造器 ```<clinit>()```方法的过程。此方法不需定义，是 Javac 编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。
+初始化阶段是执行 类构造器 `<clinit>()`方法的过程。此方法不需定义，是 Javac 编译器自动收集类中的所有类变量的赋值动作和静态代码块中的语句合并而来。
 
-类构造器```<clinit>()```方法规则：
+类构造器`<clinit>()`方法规则：
 
-1. 类构造器```<clinit>()```方法是有编译器自动收集类中的**所有类变量的赋值**动作和 **static 语句块**中的语句合并产生的。编译器**收集的顺序是由语句在源文件中出现的顺序**所决定的。静态语句块中只能访问到定义在静态语句块**之前**的变量，定义在其之后的变量，在静态语句块中**可以赋值，但是不能访问**。如：
+1. 类构造器`<clinit>()`方法是有编译器自动收集类中的**所有类变量的赋值**动作和 **static 语句块**中的语句合并产生的。编译器**收集的顺序是由语句在源文件中出现的顺序**所决定的。静态语句块中只能访问到定义在静态语句块**之前**的变量，定义在其之后的变量，在静态语句块中**可以赋值，但是不能访问**。如：
    ![alt text](../image/非法向前引用变量.jpg)
 
    1、能够前向赋值，是因为在准备阶段，就已经对 i 这个变量分配空间和赋 0 的操作了
 
    2、前向引用报错，至于为什么不能调用后面的变量，这其实是一个 JVM 语法规定，对于静态变量，你可以在它的声明前面赋值，但是不允许你在它的声明前面访问。
 
-2. 类构造器```<clinit>()```方法与类的构造器<init>()方法不同，JVM 会保证子类的```<c1init>()```执行前，父类的```<clinit>()```已经执行完毕，即父类<c1init>()先执行。因此，在虚拟机中第一个被执行的```<clinit>()```方法的类肯定是 java.lang.Object
+2. 类构造器`<clinit>()`方法与类的构造器<init>()方法不同，JVM 会保证子类的`<c1init>()`执行前，父类的`<clinit>()`已经执行完毕，即父类<c1init>()先执行。因此，在虚拟机中第一个被执行的`<clinit>()`方法的类肯定是 java.lang.Object
 
-3. 由于父类的```<clinit>()```方法先执行，也就意味着父类中定义的静态语句块要优于子类的变量赋值。所以在代码清单 7-6 中字段 B 的值将会是 2 不是 1
+3. 由于父类的`<clinit>()`方法先执行，也就意味着父类中定义的静态语句块要优于子类的变量赋值。所以在代码清单 7-6 中字段 B 的值将会是 2 不是 1
    ![alt text](../image/clinit方法执行顺序.jpg)
 
-4. 类构造器```<clinit>()```方法对于类或者接口来说并不是必需的，如果一个类中没有静态语句块，编译器就不会为这个类生成 ```<clinit>()```方法。
+4. 类构造器`<clinit>()`方法对于类或者接口来说并不是必需的，如果一个类中没有静态语句块，编译器就不会为这个类生成 `<clinit>()`方法。
 
-5. **Interface 接口**不能使用静态语句块，但也可以定义 static 变量+给变量赋值，生成的```<clinit>()```方法不需要先执行 Parent Interface 父接口中的```<clinit>()```方法，只有当父接口中定义的变量使用时，父接口才会初始化。同理，**接口的实现类**在初始化的时候也一样不会执行接口中的```<clinit>()```方法。
+5. **Interface 接口**不能使用静态语句块，但也可以定义 static 变量+给变量赋值，生成的`<clinit>()`方法不需要先执行 Parent Interface 父接口中的`<clinit>()`方法，只有当父接口中定义的变量使用时，父接口才会初始化。同理，**接口的实现类**在初始化的时候也一样不会执行接口中的`<clinit>()`方法。
 
-6. 虚拟机会保证一个类的```<clinit>()```方法在多线程环境中被正确的加锁/同步，如果多线程同时去初始化一个类，只会有一个线程去初始化，其他线程都阻塞。
+6. 虚拟机会保证一个类的`<clinit>()`方法在多线程环境中被正确的加锁/同步，如果多线程同时去初始化一个类，只会有一个线程去初始化，其他线程都阻塞。
 
 ### 2.6 初始化时机
 
 ### 2.6.1 主动引用
+
 虽然对于加载时机，java 虚拟机规范中并没有进行强制约束。这点可以交给虚拟机的具体实现来自由把握。但是对于初始化阶段，虚拟机规范则严格规定了有且只有五种情况必须立即对类进行"初始化"(加载,验证,准备自然需要在初始化之前开始)。
 
-1. 遇到 new 指令(使用关键字 new 来实例化对象)，getstatic，putstatic(读取或设置一个类的静态字段的时候,除了 final 修饰,在编译时期就已经把结果放在常量池的静态字段)或invokestatic(调用类的静态方法)这4条字节码指令时,如果类没有进行初始化,则需要先 触发其初始化.
+1. 遇到 new 指令(使用关键字 new 来实例化对象)，getstatic，putstatic(读取或设置一个类的静态字段的时候,除了 final 修饰,在编译时期就已经把结果放在常量池的静态字段)或 invokestatic(调用类的静态方法)这 4 条字节码指令时,如果类没有进行初始化,则需要先 触发其初始化.
 2. 使用 java.lang.reflect 包的方法对类进行反射调用的时候,如果类没有进行过初始化,则需要先触发其初始化.
 3. 当初始化一个类的时候,如果发现其父类还没有进行初始化,则需要先触发其父类的初始化(接口初始化例外,不要求所有父接口全部都初始化,只有在真正调用到父接口的时候才会初始化).
-4. 当启动虚拟机时,用户需要指定一个需要执行的主类（main方法所在）,虚机先初始化这个主类.
-5. 当使用java7的动态语言支持时,如果一个MethodHandle实例在解析时,该方法对应的类没有进行初始化,则需要先触发其初始化。
+4. 当启动虚拟机时,用户需要指定一个需要执行的主类（main 方法所在）,虚机先初始化这个主类.
+5. 当使用 java7 的动态语言支持时,如果一个 MethodHandle 实例在解析时,该方法对应的类没有进行初始化,则需要先触发其初始化。
 
-**有且只有**这五种场景中的行为称之为对一个类进行**主动引用**     
-除此之外，所有引用类型的方式都不会触发初始化，叫做**被动引用**  
+**有且只有**这五种场景中的行为称之为对一个类进行**主动引用**  
+除此之外，所有引用类型的方式都不会触发初始化，叫做**被动引用**
 
 ### 2.6.2 被动引用
 
-1. 通过子类引用父类的静态字段，不会导致子类初始化：     
-(此时的静态资源不是属于子类的,底层还是使用的是 SuperClass.value去访问的,所以只初始化 父类SuperClass,而不初始化 SubClass)
-![alt text](../image/子类引用父类的静态字段.jpg)
+1. 通过子类引用父类的静态字段，不会导致子类初始化：  
+   (此时的静态资源不是属于子类的,底层还是使用的是 SuperClass.value 去访问的,所以只初始化 父类 SuperClass,而不初始化 SubClass)
+   ![alt text](../image/子类引用父类的静态字段.jpg)
 
-2. 通过数组定义来引用类，不会触发此类的初始化：    
-![alt text](../image/通过数组定义来引用类.jpg)
+2. 通过数组定义来引用类，不会触发此类的初始化：  
+   ![alt text](../image/通过数组定义来引用类.jpg)
 
-3. final定义的常量会在编译阶段存入调用类的常量池中，本质上并没有直接引用到定义常量的类,因此不会触发定义常量的类的初始化.
-![alt text](../image/final定义的常量的引用.jpg)
+3. final 定义的常量会在编译阶段存入调用类的常量池中，本质上并没有直接引用到定义常量的类,因此不会触发定义常量的类的初始化.
+   ![alt text](../image/final定义的常量的引用.jpg)
 
 **例题：**
 判断以下两种情况的输出
@@ -170,6 +171,7 @@ _JAVA 本身是相对安全的语言(相对 c/c++), 如果使用纯粹的 java �
 首先,当有代码调用了类中的静态方法 getSingleTon,会触发类的初始化.
 
 **对于情况一:**
+
 - 连接阶段,为静态变量赋初始值.count1=0, count2=0, singltTon=null.
 - 初始化阶段,从上到下依次执行赋值操作和静态代码块.
 - count1=0, count2=0,创建对象之后,对两个数值进行递增.结果 count1=1,count2=1.
@@ -193,16 +195,16 @@ _JAVA 本身是相对安全的语言(相对 c/c++), 如果使用纯粹的 java �
 
 ### 1. 类加载器的结构和种类
 
-### 1.1JVM支持两种类型的类加载器
+### 1.1JVM 支持两种类型的类加载器
 
 - 引导类加载器（Bootstrap ClassLoader） C/C++ 实现
-- 自定义类加载器（User-Defined ClassLoader） java实现。
+- 自定义类加载器（User-Defined ClassLoader） java 实现。
 
 ![alt text](../image/类加载器.jpg)
 
-从概念上来讲，自定义类加载器一般指的是程序中由开发人员自定义的一类类加载器，但是Java虚拟机规范却没有这么定义，而是将所有派生于抽象类ClassLoader(**java.lang.ClassLoader**)的类加载器都划分为自定义类加载器。**(即除了引导类加载器之外的：extension classloader + system(app) classloader + user-defined class loader都被划分为自定义类加载器的范畴)**
+从概念上来讲，自定义类加载器一般指的是程序中由开发人员自定义的一类类加载器，但是 Java 虚拟机规范却没有这么定义，而是将所有派生于抽象类 ClassLoader(**java.lang.ClassLoader**)的类加载器都划分为自定义类加载器。**(即除了引导类加载器之外的：extension classloader + system(app) classloader + user-defined class loader 都被划分为自定义类加载器的范畴)**
 
-### 1.2 classloader继承树的关系
+### 1.2 classloader 继承树的关系
 
 ![alt text](../image/classloader继承树.jpg)
 
@@ -211,6 +213,7 @@ _JAVA 本身是相对安全的语言(相对 c/c++), 如果使用纯粹的 java �
 ![alt text](../image/类加载器之间的关系.jpg)
 
 示例：classloader test
+
 ```java
 public class ClassLoaderTest {
     public static void main(String[] args) throws ClassNotFoundException {
@@ -234,45 +237,46 @@ public class ClassLoaderTest {
         ClassLoader bootstrapClassLoader2 = extClassLoader.getParent();
         System.out.println(bootstrapClassLoader1);//null
         System.out.println(bootstrapClassLoader2);//null
-        
+
     }
 }
 ```
 
 ### 1.3 启动类(引导类)加载器（Bootstrap ClassLoader）
 
-- 这个类加载使用C/C++语言实现的，嵌套在JVM内部，可以说是JVM的一部分。
-- 它用来加载Java的核心类库（JAVA_HOME/jre/lib/rt.jar、resources.jar或sun.boot.class path路径下的内容），用于提供JVM自身需要的类(也可以配置参数-Xbootclasspath 参数指定的路径中 )
-- 并不继承自java.lang.ClassLoader，没有父加载器。
+- 这个类加载使用 C/C++语言实现的，嵌套在 JVM 内部，可以说是 JVM 的一部分。
+- 它用来加载 Java 的核心类库（JAVA_HOME/jre/lib/rt.jar、resources.jar 或 sun.boot.class path 路径下的内容），用于提供 JVM 自身需要的类(也可以配置参数-Xbootclasspath 参数指定的路径中 )
+- 并不继承自 java.lang.ClassLoader，没有父加载器。
 - 加载扩展类和应用程序类加载器，并指定为他们的父类加载器。
-- 出于安全考虑，Bootstrap启动类加载器只加载包名为java、javax、sun等开头的类
+- 出于安全考虑，Bootstrap 启动类加载器只加载包名为 java、javax、sun 等开头的类
 
 ### 1.4 扩展类加载器（Extension ClassLoader）
 
-- Java语言编写，由**sun.misc.Launcher$ExtClassLoader**实现。
-- 派生于Classloader类
+- Java 语言编写，由**sun.misc.Launcher$ExtClassLoader**实现。
+- 派生于 Classloader 类
 - **父类加载器为启动类加载器**
-- 从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的 jre/lib/ext 子目录（扩展目录）下加载类库。如果用户创建的 JAR 放在此目录下，也会自动由扩展类加载器加载
+- 从 java.ext.dirs 系统属性所指定的目录中加载类库，或从 JDK 的安装目录的 jre/lib/ext 子目录（扩展目录）下加载类库。如果用户创建的 JAR 放在此目录下，也会自动由扩展类加载器加载
 
 ### 1.5 应用程序类加载器（AppClassLoader）//也叫做系统类加载器（system classloader）
 
-- java语言编写，由**sun.misc.Launcher$AppClassLoader**实现
-- 派生于ClassLoader类
+- java 语言编写，由**sun.misc.Launcher$AppClassLoader**实现
+- 派生于 ClassLoader 类
 - **父类加载器为扩展类加载器**
-- 它负责加载环境变量classpath或系统属性 java.class.path路径下的类库(java.class.path包括系统启动时的加载所有class的路径)
-- 该类加载是**程序中默认的类加载器**，一般来说，Java应用的类都是由它来完成加载
-- 通过Classloader.getSystemClassLoader()方法可以获取到该类加载器
+- 它负责加载环境变量 classpath 或系统属性 java.class.path 路径下的类库(java.class.path 包括系统启动时的加载所有 class 的路径)
+- 该类加载是**程序中默认的类加载器**，一般来说，Java 应用的类都是由它来完成加载
+- 通过 Classloader.getSystemClassLoader()方法可以获取到该类加载器
 
 ![alt text](../image/类加载器的加载路径.jpg)
 
 示例：
+
 ```java
 public class LoaderPathTest {
     public static void main(String[] args) {
         System.out.println("=======================启动类加载器=======================");
         URL[] urls = sun.misc.Launcher.getBootstrapClassPath().getURLs();
         for(URL url:urls){
-            System.out.println(url);  
+            System.out.println(url);
         }
 
         System.out.println("=======================扩展类加载器=======================");
@@ -293,8 +297,36 @@ public class LoaderPathTest {
 
 ![alt text](../image/类加载器路径.jpg)
 
+### 1.6 用户自定义类加载器（UserDefined ClassLoader）
+
+#### 1.6.1 什么时候会自定义类的加载器？
+
+1.  隔离加载类:  
+    用于中间件有自己依赖的 jar 包，在同一个项目里引入同一个框架的话有可能出现某些件路径一样类名相同，即类的冲突，这种情况需要做类的仲裁。不同的用户自定义类加载器可以实现类的隔离  避免类的冲突。
+2.  修改类加载的方式
+3.  扩展加载源
+4.  防止源码泄漏: 为了防止被编译和篡改可以对字节码文件进行加密，用自定义类加载器解密
+
+#### 1.6.2 如何实现自定义类的加载器
+
+1. 开发人员可以通过继承抽象类 java.lang.ClassLoader 类的方式，实现自己的类加载器，以满足一些特殊的需求
+2. 在 JDK1.2 之前，在自定义类加载器时，总会去继承 ClassLoader 类并重写 loadClass()方法，从而实现自定义的类加载类，但是在 JDK1.2 之后已不再建议用户去覆盖 loadClass()方法，而是建议把自定义的类加载逻辑写在 **findClass()**方法中
+3. 在编写自定义类加载器时，如果没有太过于复杂的需求，可以直接继承 URLClassLoader 类，这样就可以避免自己去编写 findClass()方法及其获取字节码流的方式，使自定义类加载器编写更加简洁.
+
+### 1.7 ClassLoader 类
+
+ClassLoader 类，它是一个抽象类；其后所有的类加载器都继承自 ClassLoader（不包括启动类加载器）
+| 方法名称 ｜ 描述｜
+| ---- | -- |
+|getParent() ｜ 返回该类加载器的父类加载器 |
+|loadClass(String name) ｜ 加载名称为 name 的类，返回结果为 java.lang.Class 类的实例 |
+|findClass(String name) ｜ 查找名称为 name 的类，返回结果为 java.lang.Class 类的实例（和 defineClass 搭配使用） |
+| findLoaderClass(String name) ｜ 查找名称为 name 的已经被加载过的类，返回结果为 java.lang.Class 类的实例 |
+| defineClass(String name,byte[] b,int off,int len) ｜ 把字节数组 b 的内容转换为一个 Java 类，返回结果为 java.lang.Class 类的实例 |
+| resolveClass(Class<?> c) | 连接指定一个 Java 类 |
+
 ## 参考
 
 - 《深入理解 java 虚拟机》 第七章-虚拟机类加载机制
 - oracle 文档： https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-5.html
-- b站尚硅谷jvm：https://www.bilibili.com/video/BV1PJ411n7xZ?p=31
+- b 站尚硅谷 jvm：https://www.bilibili.com/video/BV1PJ411n7xZ?p=31
