@@ -326,6 +326,70 @@ ClassLoader 类，它是一个抽象类；其后所有的类加载器都继承�
 | defineClass(String name,byte[] b,int off,int len) | 把字节数组 b 的内容转换为一个 Java 类，返回结果为 java.lang.Class 类的实例           |
 | resolveClass(Class<?> c)                          | 连接指定一个 Java 类                                                                 |
 
+**在 JVM 中表示两个 class 对象是否为同一个类存在两个必要条件：** 1. 类的完整类名必须一致，包括包名 2. 加载这个类的 classloader（指 ClassLoader 实例对象）必须相同。
+
+#### 获取 ClassLoader 的途径
+
+1. 获取当前类的 ClassLoader: **class.getClassLoader()**
+2. 获取当前线程上下文的 ClassLoader: **Thread.currentThread().getContextClassLoader()**
+3. 获取系统的 ClassLoader: **ClassLoader.getSystemClassLoader()**
+4. 获取调用者的: **DriveManager.getCallerClassLoader()**
+
+## 双亲委托机制
+
+Java 虚拟机对 class 文件采用的是按需加载的方式，也就是说当需要使用该类时才会将它的 class 文件加载到内存生成 class 对象。而且加载某个类的 class 文件时，只需要加载进内存一次就足够了。为了避免重复加载，当父 ClassLoader 已经加载了该类的时候，就没有必要子 ClassLoader 再加载一次。这种加载器之间的层次关系，就叫做双亲委派模型(Parents Delegation Model)
+
+### 1. 工作原理
+
+1. 如果一个类加载器收到了类加载请求，它并不会自己先去加载，而是把这个请求委托给父类的加载器去执行；
+2. 如果父类加载器还存在其父类加载器，则进一步向上委托，依次递归，请求最终将到达顶层的启动类加载器；
+3. 如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派模式
+
+![alt text](../image/类加载器的加载路径.jpg)
+
+**除了 rt.jar 和 jre/lib/ext 路径下的 jar 包，其他 class_path 路径下的 jar 包的 class 文件默认由是系统类加载器加载**
+
+**优点：**
+
+- 避免类的重复加载
+- 保护程序安全，防止核心 API 被随意篡改
+- 比如自定义了一个 java.lang.String，同名仍然是加载到核心类库的 String
+- 在比如自定义了一个 java.lang 包下不存在的类，引导类加载器加载 这个类 会直接报错（权限不足）
+
+### 2. 破坏双亲委托机制
+
+双亲委派模型，并不是一个强制性的约束模型，而是 java 设计者推荐给开发者的类加载实现方式。在 java 的世界中大部分的类加载器都遵循这个模型。但是，在一些应用场景下，由于直接或间接的原因，双亲委派模型被破坏。
+
+1. 在我们自定义类加载器的时候，可以复写父类 ClassLoader 的 loadClass 方法，这样就直接破坏了双亲委派模型。到后面 JDK1.2 之后，为了解决这个问题以及兼容问题，提供了一个 findClass()方法。
+2. 如果 API 中的基础类想要调用用户的代码(JNDI/JDBC 等)，此时双亲委派模型就不能完成(反向委派)。为了解决这个问题，java 设计团队只好使用一个不优雅的设计方案：Thread 的上下文类加载器，默认就是应用程序的类加载器。
+3. 由于程序动态性的发展，希望应用程序不用重启就可以加载最新的字节码文件。此时就需要破坏双亲委派模型。
+4. 双亲委派模型被破坏，并不包含贬义，只要有足够意义和理由就可以认为这是一种创新，什么方式会打破双亲委派模型呢?
+   - 自定义类加载器，复写 loadClass 方法。
+   - 使用线程的上下文类加载器对象
+
+### 3. 沙箱安全机制
+
+自定义 string 类，但是在加载自定义 string 类的时候会率先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载 jdk 自带的文件（rt，jar 包中 java\lang\string.class），报错信息说没有 main 方法，就是因为加载的是 rt.jar 包中的 string 类。这样可以保证对 java 核心源代码的保护，这就是沙箱安全机制。沙箱机制就是将 Java 代码限定在虚拟机(JVM)特定的运行范围中，并且严格限制代码对本地系统资源访问，通过这样的措施来保证对代码的有效隔离，防止对本地系统造成破坏。
+
+```java
+package java.lang;
+
+public class String {
+    static {
+        System.out.println("我是病毒，嘿嘿嘿");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("尝试接入");
+    }
+}
+```
+
+沙箱机制的作用：
+
+- 防止不安全代码访问、破坏安全代码。
+- 防止不安全代码冒充安全的类。
+
 ## 参考
 
 - 《深入理解 java 虚拟机》 第七章-虚拟机类加载机制
