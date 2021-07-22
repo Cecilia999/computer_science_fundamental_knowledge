@@ -13,26 +13,9 @@
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-### 1.1 [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
+### 2.1 [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
 
-### 1.2 runtime data area
-
-- Java 堆（Heap）
-  　　是 Java 虚拟机所管理的内存中最大的一块，在虚拟机启动时创建。线程共享，此内存区域的唯一目的就是存放对象实例。
-  包含了 Young Generation + old gen
-- 方法区（Method Area）
-  　　线程共享，它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。
-
-- 程序计数器（Program Counter Register）
-  　　线程私有，是一块较小的内存空间，它的作用可以看做是当前线程所执行的字节码的行号指示器。
-
-- JVM 栈（JVM Stacks）
-  　　线程私有，生命周期与线程相同。
-  虚拟机栈描述的是 Java 方法执行的内存模型：每个方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于存储局部变量表、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。
-
-- 本地方法栈（Native Method Stacks）
-  　　线程私有，与虚拟机栈所发挥的作用是非常相似的，其区别不过是虚拟机栈为虚拟机执行 Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的 Native 方法服务。
-  _PS: Native Method 就是一个 java 调用非 java 代码的接口_
+### 2.2 [运行时数据区 runtime data area](运行时数据区.md)
 
 ## 3. JVM 的对象分配规则
 
