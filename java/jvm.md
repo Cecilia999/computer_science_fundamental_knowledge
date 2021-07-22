@@ -13,7 +13,7 @@
 
 ![Alt text](../image/jvm_architecture.jpg)
 
-### 2.1 [类加载器 (class loader) + jvm 类加载的过程/机制](jvm_class_loader.md)
+### 2.1 [类加载器 (class loader) + jvm 类加载的过程/机制](类加载子系统.md)
 
 ### 2.2 [运行时数据区 runtime data area](运行时数据区.md)
 
