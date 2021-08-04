@@ -1,6 +1,6 @@
 # Operating System
 
-### 1. [Process vs Thread 线程和进程](process_thread.md)
+### 1. [Process vs Thread 线程和进程](进程_线程.md)
 
 ### 2. [IPC - InterProcess Communication 进程通信](interprocess_communication.md)
 
