@@ -1,46 +1,4 @@
-# HTTPS
-
-### 1. HTTP 1.0 vs 1.1 vs 2.0
-
-1. http 1.0
-
-   每次请求都要创建新的连接，三次握手，请求完成后断开连接
-
-2. http 1.1
-
-   - Persistent Connection 长连接:  
-      HTTP1.1 支持长连接，在一个 TCP 连接上可以传送多个 HTTP 请求和响应，减少了建立和关闭连接的消耗和延迟  
-      在 HTTP1.1 中默认开启长连接 keep-alive，一定程度上弥补了 HTTP1.0 每次请求都要创建连接的缺点。
-   - 节约带宽
-     - HTTP1.0 中存在一些浪费带宽的现象，例如客户端只是需要某个对象的一部分，而服务器却将整个对象送过来了
-     - HTTP1.0 不支持断点续传功能。HTTP1.1 支持只发送 header 信息（不带任何 body 信息）
-       如果服务器认为客户端有权限请求服务器，则返回 100，客户端接收到 100 才开始把请求 body 发送到服务器；  
-       如果返回 401，客户端就可以不用发送请求 body 了节约了带宽。
-   - hostname  
-     在 HTTP1.0 中认为每台服务器都绑定一个唯一的 IP 地址，因此，请求消息中的 URL 并没有传递主机名（hostname），HTTP1.0 没有 host 域。随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个 IP 地址。HTTP1.1 的请求消息和响应消息都支持 host 域，且请求消息中如果没有 host 域会报告一个错误（400 Bad Request）。
-
-   - 缓存处理  
-     HTTP1.0 中主要使用 header 里的 If-Modified-Since,Expires 来做为缓存判断的标准  
-     **HTTP1.1 引入了更多的缓存控制策略**, 例如 Entity tag，If-Unmodified-Since, If-Match, If-None-Match 等更多可供选择的缓存头来控制缓存策略。
-   - 错误通知的管理  
-     增加了更多错误状态响应码
-
-3. http 2.0
-
-   - multiplexing 多路复用  
-     支持同一个连接并发处理多个请求.  
-     **原来是同一个 TCP 连接里面，上一个回应（response）发送完了，服务器才能发送下一个, 现在可以多个回应一起发送。**
-   - 头部数据压缩  
-     1.1 只压缩 entity body，不支持 header 的数据压缩。2.0 压缩 header 数据体积小了，在网络上传输就会更快。
-   - server push 服务器推送  
-     ![Alt text](../image/http_server_push.jpg)
-
-     服务端推送是一种在客户端请求之前发送数据的机制。  
-     网页使用了许多资源：HTML、样式表、脚本、图片等等。在 HTTP1.1 中这些资源每一个都必须明确地请求。这是一个很慢的过程。浏览器从获取 HTML 开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。
-
-     为了改善延迟，HTTP2.0 引入了 server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前，免得客户端再次 创建连接发送请求到服务器端获取。这样客户端可以直接从本地加载这些资源，不用再通过网络。
-
-## HTTPs - Hypertext Transfer Protocol Security Socket Laryer
+# HTTPS - Hypertext Transfer Protocol Security Socket Laryer
 
 ### 1. 什么是 https
 
