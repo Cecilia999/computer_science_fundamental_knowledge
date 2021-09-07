@@ -222,7 +222,7 @@ create_ticket 的语义是获取一个服务器端生成的唯一的处理号 ti
 
 ### 4.2 请求方法的 idempotence 幂等性
 
-1. HTTP GET 方法用于获取资源，不应有副作用，所以是幂等的。比如：GET http://www.bank.com/account/123456， 不会改变资源的状态，不论调用一次还是 N 次都没有副作用。请注意，这里强调的是一次和 N 次具有相同的副作用，而不是每次 GET 的结果相同。GET http://www.news.com/latest-news， 这个 HTTP 请求可能会每次得到不同的结果，但它本身并没有产生任何副作用，因而是满足幂等性的。
+1. HTTP GET 方法用于获取资源，不应有副作用，所以是幂等的。比如：_GET http://www.bank.com/account/123456_，不会改变资源的状态，不论调用一次还是 N 次都没有副作用。请注意，这里强调的是一次和 N 次具有相同的副作用，而不是每次 GET 的结果相同。_GET http://www.news.com/latest-news_，这个 HTTP 请求可能会每次得到不同的结果，但它本身并没有产生任何副作用，因而是满足幂等性的。
 
 2. HTTP DELETE 方法用于删除资源，有副作用，但它应该满足幂等性。比如：DELETE http://www.forum.com/article/4231， 调用一次和 N 次对系统产生的副作用是相同的，即删掉 id 为 4231 的帖子；因此，调用者可以多次调用或刷新页面而不必担心引起错误。
 
@@ -232,7 +232,7 @@ create_ticket 的语义是获取一个服务器端生成的唯一的处理号 ti
 
 - The PUT method requests that the enclosed entity be stored under the supplied Request-URI. If the Request-URI refers to an already existing resource, the enclosed entity SHOULD be considered as a modified version of the one residing on the origin server. If the Request-URI does not point to an existing resource, and that URI is capable of being defined as a new resource by the requesting user agent, the origin server can create the resource with that URI.
 
-- POST 所对应的 URI 并非创建的资源本身，而是资源的接收者。比如：_POST http://www.forum.com/articles_ 的语义是在 http://www.forum.com/articles 下创建一篇帖子，HTTP 响应中应包含帖子的创建状态以及帖子的 URI。两次相同的 POST 请求会在服务器端创建两份资源，它们具有不同的 URI；所以，POST 方法不具备幂等性。而 PUT 所对应的 URI 是要创建或更新的资源本身。比如：_PUT http://www.forum/articles/4231_ 的语义是创建或更新 ID 为 4231 的帖子。对同一 URI 进行多次 PUT 的副作用和一次 PUT 是相同的；因此，PUT 方法具有幂等性。
+- POST 所对应的 URL 并非创建的资源本身，而是资源的接收者。比如：_POST http://www.forum.com/articles_ 的语义是在 http://www.forum.com/articles 下创建一篇帖子，HTTP 响应中应包含帖子的创建状态以及帖子的 URL。两次相同的 POST 请求会在服务器端创建两份资源，它们具有不同的 URL；所以，POST 方法不具备幂等性。而 PUT 所对应的 URI 是要创建或更新的资源本身。比如：_PUT http://www.forum/articles/4231_ 的语义是创建或更新 ID 为 4231 的帖子。对同一 URL 进行多次 PUT 的副作用和一次 PUT 是相同的；因此，PUT 方法具有幂等性。
 
 在介绍了几种操作的语义和幂等性之后，我们来看看如何通过 Web API 的形式实现前面所提到的取款功能。
 
