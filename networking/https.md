@@ -1,46 +1,6 @@
-# HTTP VS HTTPS
+# HTTPS
 
-## HTTP - Hypertext Transfer Protocol
-
-### 1. 什么是 http
-
-- HTTP 是 application layer 应用层的传输协议
-- 用于定义 WEB 浏览器与 WEB 服务器之间交换数据的过程:  
-   客户端连上 WEB 服务器后，若想获得 WEB 服务器中的某个 WEB 资源，需遵守一定的通讯格式，HTTP 协议用于定义客户端与 WEB 服务器通迅的格式。
-- HTTP 是一个无状态的协议
-
-### 2. HTTP 请求 & 响应
-
-**HTTP request message includes：**
-
-- request line 请求行 : method + url + http version
-  - method fields includes: _GET, POST, HEAD, PUT, and DELETE_
-- header lines 多个消息头
-- blank line 一个空行
-- entity body
-
-**HTTP response message includes：**
-
-- an initial status line 状态行
-  - status code includes:
-    - 200 OK
-    - 301 Moved Permanently 为了完成请求，客户端需要进一步细化请求。例如，请求的资源已经移动到一个新的地址
-    - 400 Bad Request 客户端请求有误. [例如 http1.1 没有 hostname](https://github.com/Cecilia999/interview/blob/main/networking/http_vs_https.md#3-http-10-vs-11-vs-20)
-    - 404 Not Found 请求的 document 不存在
-    - 500 Server Internal Error 服务端出现错误
-- six header lines
-
-  - header lines includes:
-    > Connection: close  
-    > Date: Tue, 18 Aug 2015 15:44:04 GMT  
-    > Server: Apache/2.2.3 (CentOS)  
-    > Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT  
-    > Content-Length: 6821  
-    > Content-Type: text/html
-
-- entity body
-
-### 3. HTTP 1.0 vs 1.1 vs 2.0
+### 1. HTTP 1.0 vs 1.1 vs 2.0
 
 1. http 1.0
 
