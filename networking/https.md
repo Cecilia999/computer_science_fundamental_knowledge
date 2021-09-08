@@ -1,27 +1,43 @@
-# HTTPS - Hypertext Transfer Protocol Security Socket Laryer
+# HTTPS - Hypertext Transfer Protocol Secure Socket Laryer
 
-### 1. 什么是 https
+## 1. 什么是 https
 
-简单来说就是在 HTTP 下加入 SSL 层，HTTPS 的安全基础是 SSL，因此加密的详细内容就需要 SSL
+**HTTPS = HTTP + 加密 + 认证 + 完整性保护**
 
-### 2. https 的作用
+通过在在 HTTP 下加入 SSL(Secure Socket Laryer)/TLS(Transfer Layer Security) 层实现，SSL/TLS 是独立于 HTTP 的协议。
+
+## 2. https 的作用
 
 - 内容加密 Confidentiality: 建立一个信息安全通道，来保证数据传输的安全；
 - 身份认证 End-point authentication: 确认网站的真实性
 - 数据完整性 Message integrity: 防止内容被第三方冒充或者篡改
 
-### 3. https 相比 http 的劣势
+## 3. https vs http 区别/优缺点
 
-**对数据进行加解密决定了它比 http 慢**: 需要进行非对称的加解密，且需要三次握手。首次连接比较慢点，当然现在也有很多的优化。
+1. 加密
 
-出于安全考虑，浏览器不会在本地保存 HTTPS 缓存。实际上，只要在 HTTP 头中使用特定命令，HTTPS 是可以缓存的。Firefox 默认只在内存中缓存 HTTPS。但是，只要头命令中有 Cache-Control: Public，缓存就会被写到硬盘上。 IE 只要 http 头允许就可以缓存 https 内容，缓存策略与是否使用 HTTPS 协议无关。
+   - **http 通信都是明文**，数据在客户端与服务器通信过程中，任何一点都可能被劫持。比如，发送了银行卡号和密码，hacker 劫取到数据，就能看到卡号和密码，这是很危险的。
+   - https 采用了非对称加密+对称加密的方式，即使数据被监听也不容易解密
 
-### 4. https vs http
+2. 身份认证
 
-1. https 协议需要到 CA 申请证书。
-2. http 是超文本传输协议，信息是明文传输；https 则是具有安全性的 ssl 加密传输协议。
-3. http 和 https 使用的是完全不同的连接方式，用的端口也不一样，http 默认使用 80 端口，https 默认使用 443 端口
-4. http 的连接很简单，是无状态的；HTTPS 协议是由 SSL/TLS+HTTP 协议构建的可进行加密传输、身份认证的网络协议，比 http 协议安全。
+   - http 不验证通信方身份，可能遭到伪装
+   - https 会在数据传输前进行 CA 证书验证。通信双方携带 CA 证书，CA 证书相当于身份证，有 CA 证书就认为合法，没有 CA 证书就认为非法，CA 证书由第三方颁布，很难伪造
+
+3. 数据完整性验证
+
+   - http 无法验证数据的完整性，如果数据的一部分被篡改，接受方无法得知
+   - https 使用 digital signature 数字签名来验证数据的完整性（也是非对称加密的一种）
+
+4. **https 比 http 慢**
+
+   - 加密解密耗时
+   - 首次连接 http = tcp 握手，https = tcp 握手 + ssl 握手
+
+5. 缓存问题
+   出于安全考虑，浏览器不会在本地保存 HTTPS 缓存。实际上，只要在 HTTP 头中使用特定命令，HTTPS 是可以缓存的。Firefox 默认只在内存中缓存 HTTPS。但是，只要头命令中有 Cache-Control: Public，缓存就会被写到硬盘上。 IE 只要 http 头允许就可以缓存 https 内容，缓存策略与是否使用 HTTPS 协议无关。
+
+## 4. https vs http
 
 ![Alt text](../image/https.jpg)
 
