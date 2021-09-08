@@ -27,7 +27,7 @@
 3. 数据完整性验证
 
    - http 无法验证数据的完整性，如果数据的一部分被篡改，接受方无法得知
-   - https 使用 digital signature 数字签名来验证数据的完整性（也是非对称加密的一种）
+   - https 使用 digital signature 数字签名来验证数据的完整性 (数字签名 = 非对称密钥加解密”+“数字摘要)
 
 4. **https 比 http 慢**
 
@@ -35,45 +35,86 @@
    - 首次连接 http = tcp 握手，https = tcp 握手 + ssl 握手
 
 5. 缓存问题
+
    出于安全考虑，浏览器不会在本地保存 HTTPS 缓存。实际上，只要在 HTTP 头中使用特定命令，HTTPS 是可以缓存的。Firefox 默认只在内存中缓存 HTTPS。但是，只要头命令中有 Cache-Control: Public，缓存就会被写到硬盘上。 IE 只要 http 头允许就可以缓存 https 内容，缓存策略与是否使用 HTTPS 协议无关。
 
-## 4. https vs http
-
 ![Alt text](../image/https.jpg)
+![Alt text](../image/https_ssl.jpg)
 
-### 5. 加密相关的知识
+## 5. 加密相关的知识
 
-1. 对称加密  
-   对称加密(也叫私钥加密)指加密和解密使用相同密钥的加密算法。
-2. 非对称加密  
-   与对称加密算法不同，非对称加密算法需要两个密钥：公开密钥（publickey）和私有密钥（privatekey）
+### 5.1 基本的单向加密算法
 
-3. hash function 摘要算法  
-   就是一个 function H() take an input m become a fixed size H(m) and it is impossible to find what m is with given H(m). Even a single letter change in message m will caused H(m) totally different.  
-   hash function 是 https 能确保数据完整性和防篡改的根本原因
+（不可逆地进行加密，每个原值加密后都一样，破解的原理是用字符集去逐个进行比对）：
 
-4. message authentication code 消息认证码  
-   用 hash fucntion 只能保证 message integrity, 但不能验证对方的身份。如果 a 和 b 进行通信，a 和 b 需要一个 shared secret s. 应该用 m+s instead of m.  
-   H(m+s) is called the message authentication code (MAC).
+- **BASE64** 严格地说，属于==编码格式==，而非加密算法
+- **MD5**(Message Digest algorithm 5，信息摘要算法)
+- **SHA**(Secure Hash Algorithm，安全散列算法)
+- HMAC(Hash Message Authentication Code，散列消息鉴别码)
 
-5. digital signature 数字签名
+### 5.2 对称加密（AES、DES、PBE） vs 非对称加密（RSA）
 
-   - 数字签名技术就是对“非对称密钥加解密”和“数字摘要“两项技术的应用，**它将 hash(m)用发送者的私钥加密**，与原文 m 一起传送给接收者。这个部分就是数字签名！
-   - 接收者只有用发送者的公钥才能解密被加密的摘要信息，然后用 HASH 函数对收到的原文产生一个摘要信息，与解密的摘要信息对比。如果相同，则说明收到的信息是完整的，在传输过程中没有被修改，否则说明信息被修改过，因此数字签名能够验证信息的完整性。
+1. 对称加密(也叫**私钥**加密、共享密钥加密)
 
-   **数字签名的过程如下：**  
-   明文 --> hash 运算 --> 摘要 --> 私钥加密 --> 数字签名  
-   **数字签名有两种功效：**  
-   一、能确定消息确实是由发送方签名并发出来的，因为别人假冒不了发送方的签名。  
-   二、数字签名能确定消息的完整性，_数据本身是否加密不属于数字签名的控制范围_
+   指加密和解密使用相同密钥的加密算法。即信息的发送方和接收方使用同一个密钥去加密和解密数据。对称加密的特点是算法公开、加密和解密速度快，适合于对大数据量进行加密。缺点是如果 hacker 拿到 private key 就可以解密盗取/篡改。
 
-6. digital certificate 数字证书
+   **对称加密过程**
+
+   - 加密过程：明文 + 加密算法 + 私钥 => 密文
+   - 解密过程：密文 + 解密算法 + 私钥 => 明文
+
+2. 非对称加密(也叫公钥加密)
+
+   与对称加密算法不同，非对称加密算法需要两个密钥：公开密钥（publickey）和私有密钥（privatekey）。发送放用接受方的公钥加密，接受方用自己的私钥解密。非对称加密的缺点是加密和解密花费时间长、速度慢，只适合对少量数据进行加密。还有一个问题是如果不进行身份验证，hacker 伪装成接收方把自己的公钥发给发送方，也可以盗取信息。
+
+   **非对称加密过程：**
+
+   - 被公钥加密过的密文只能被私钥解密，过程如下：
+     明文 + 加密算法 + 公钥 => 密文， 密文 + 解密算法 + 私钥 => 明文
+   - 被私钥加密过的密文只能被公钥解密，过程如下：
+     明文 + 加密算法 + 私钥 => 密文， 密文 + 解密算法 + 公钥 => 明文
+
+3. 常见的对称加密和非对称加密
+
+- DES(Data Encryption Standard，数据加密算法)
+- PBE(Password-based encryption，基于密码验证)
+- **AES（Advanced Encryption Standard）**：使用同一个共享秘钥，加密解密，稍微快点
+- **RSA(Ron Rivest, AdiShamir 和 Leonard Adleman)**：非对称加密，生成秘钥对，公钥加密只有私钥可见，私钥加密公钥皆可见，稍微慢点
+- DH(Diffie-Hellman 算法，密钥一致协议)
+- DSA(Digital Signature Algorithm，数字签名)
+
+4. **https 采用的是用非对称加密进行身份验证，用对称加密进行数据传输**
+
+SSL 协议在握手阶段使用的是非对称加密，在传输阶段使用的是对称加密。因为非对称加密算法非常耗时，速度很慢，这种混合加密方式平衡了对称和非对称加密的优缺点
+
+### 5.3 hash function 摘要算法
+
+就是一个 function H() take an input m become a fixed size H(m) and it is impossible to find what m is with given H(m). Even a single letter change in message m will caused H(m) totally different.  
+ hash function 是 https 能确保数据完整性和防篡改的根本原因
+
+### 5.4 message authentication code 消息认证码
+
+用 hash fucntion 只能保证 message integrity, 但不能验证对方的身份。如果 a 和 b 进行通信，a 和 b 需要一个 shared secret s. 应该用 m+s instead of m.  
+ H(m+s) is called the message authentication code (MAC).
+
+### 5.5 digital signature 数字签名
+
+- 数字签名技术就是对“非对称密钥加解密”和“数字摘要“两项技术的应用，**它将 hash(m)用发送者的私钥加密**，与原文 m 一起传送给接收者。这个部分就是数字签名！
+- 接收者只有用发送者的公钥才能解密被加密的摘要信息，然后用 HASH 函数对收到的原文产生一个摘要信息，与解密的摘要信息对比。如果相同，则说明收到的信息是完整的，在传输过程中没有被修改，否则说明信息被修改过，因此数字签名能够验证信息的完整性。
+
+**数字签名的过程如下：**  
+ 明文 --> hash 运算 --> 摘要 --> 私钥加密 --> 数字签名  
+ **数字签名有两种功效：**  
+ 一、能确定消息确实是由发送方签名并发出来的，因为别人假冒不了发送方的签名。  
+ 二、数字签名能确定消息的完整性，_数据本身是否加密不属于数字签名的控制范围_
+
+### 5.6 digital certificate 数字证书
 
 为了防止 attacker 把他自己的 public key 替换用户电脑里别人的 public key.
 所以 server 端要去 Certification Authority (CA)证书授权中心为自己的公钥做公证，CA 会用自己的私钥，对 server 端的公钥和一些相关信息一起加密，生成"数字证书"（Digital Certificate）  
 之后 server 给 client 发送消息附上它的数字证书就可以了，client 用 CA 的公钥就可以解开数字证书，得到 server 端的公钥了。
 
-### 6. SSL/TLS： Secure Socket Layer 安全套接字层 / Transfer Layer Security 传输层安全协议
+## 6. SSL/TLS： Secure Socket Layer 安全套接字层 / Transfer Layer Security 传输层安全协议
 
 1. 什么是 SSL？ - Secure Socket Layer
 
@@ -97,9 +138,9 @@
 - Confidentiality: 加密数据以防止数据中途被窃取
 - message integrity: 维护数据的完整性，确保数据在传输过程中不被改变
 
-### 参考
+## 参考
 
-- https://www.cnblogs.com/andy-zhou/p/5345003.html
+- https 详解：https://www.cnblogs.com/andy-zhou/p/5345003.html
 - SSL/TLS 原理 详细整理版： https://blog.csdn.net/alinyua/article/details/79476365
 - ssl 原理详解：https://blog.csdn.net/qq_38265137/article/details/90112705
 - 数字签名过程：https://blog.csdn.net/zmx729618/article/details/78485665
