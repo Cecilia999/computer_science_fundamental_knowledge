@@ -2,6 +2,8 @@
 
 ## 面试常见问题
 
+参考： https://www.edureka.co/blog/interview-questions/docker-interview-questions/
+
 ## 1. what is docker?
 
 - **Docker is a containerization platform which packages your application and all its dependencies together in the form of containers so as to ensure that your application works seamlessly(无缝的) in any environment.**
@@ -11,15 +13,15 @@ Docker 是一个容器化平台，它以容器的形式将您的应用程序及�
 
 ## 2. what is docker containner?
 
-**Docker containers include the application and all of its dependencies.** It shares the kernel with other containers, running as isolated processes in user space on the host operating system. Docker containers are not tied to any specific infrastructure: they run on any computer, on any infrastructure, and in any cloud. Docker containers are basically runtime instances of Docker images.
+**Docker containers include the application and all of its dependencies. A container is a runnable instance of an image.** A container is relatively well isolated from other containers and its host machine. A container is defined by its image as well as any configuration options you provide to it when you create or start it. When a container is removed, any changes to its state that are not stored in persistent storage disappear.
 
 Docker 容器包括应用程序及其所有依赖项，作为操作系统的独立进程运行
 
-## 3. what is docker image?
+## 3. what is docker image? 什么是 docker 镜像？
 
-**Docker image is the source of Docker container. In other words, Docker images are used to create containers.** When a user runs a Docker image, an instance of a container is created. These docker images can be deployed to any Docker environment.
+**An Docker image is a read-only template with instructions for creating a Docker container. 是运行一个程序所需要的所有的文件，相当于一个静态的程序，需要被分配给一个容器才能运行** When a user runs a Docker image, an instance of a container is created. These docker images can be deployed to any Docker environment. To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.
 
-Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。使用 build 命令创建镜像
+Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。使用 build 命令创建镜像, 并且在使用 run 启动时它们将生成容器。镜像存储在 Docker registry (docker 注册表)中, Docker Hub 因为它们可能变得非常大, 镜像被设计为由其他镜像层组成, 允许在通过网络传输镜像时发送最少量的数据。
 
 ## 4. what do you know about dockerfile / dockerfile 最常见的 command 是什么
 
@@ -165,7 +167,7 @@ Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。�
     COPY . /tmp/
     ```
 
-    不要用 ADD 下载和解压，因为 image size matters. you should avoid doing things like:
+    不要用 ADD 下载和解压，因为 image size matters, you should use curl or wget instead. **That way you can delete the files you no longer need after they’ve been extracted and you don’t have to add another layer in your image**. you should avoid doing things like:
 
     ```
     ADD https://example.com/big.tar.xz /usr/src/things/
@@ -187,3 +189,30 @@ Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。�
 7.  ENV : 设置环境变量
 
 8.  ENTRYPOINT : 配置容器，使其可执行化。配合 CMD 可省去"application"，只使用参数。
+
+## 5. docker container vs hypervisor docker 容器和虚拟机的区别？
+
+1. container
+   It shares the kernel with other containers, running as isolated processes in user space on the infrastructure and host operating system.
+
+2. hypervisor/virtual machine monitor 虚拟机
+   It divides the host system and allocates the resources to each divided virtual environment.
+   It consist of operating system and takes up recourses such as user space, cpu and memory.
+
+## 6. docker architecture
+
+Docker uses a client-server architecture. The Docker client talks to the Docker daemon(在 docker host 宿主机中)
+![alt text](./image/docker_architecture.jpg)
+
+## 7. docker 常用命令
+
+1. 拉取指定镜像: `$ docker pull <image_name>`
+2. push 镜像到远程仓库: `$ docker push <username/image name>`
+3. 删除镜像 from local system: `$ docker rmi <image-id>`
+4. create a docker container from an image: docker run = pull + create + start `$ docker run -it -d <image_name>`
+5. list all running container: `$ docker ps`
+6. stop a running container: `$ docker stop <container_id>`
+7. kill a container: `docker kill <container_id>`
+8. delete a container: `$ docker rm <container id>`
+9. access a running container (假设有 3 个正在跑的 container，只想 access 其中一个): `$ docker exec -it <container id> bash`
+10. edit and update a container and store it in local system: `$ docker commit <conatainer id> <username/imagename>` -->> 接着 push 可以更新到远程仓库
