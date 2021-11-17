@@ -23,11 +23,19 @@ TCP 的可靠传输基本上都可以在 TCP 20B 的头部体现
 
 ## 3. 流量控制 vs 拥塞控制
 
-看：https://blog.csdn.net/dangzhangjing97/article/details/81008836)
+看：
+
+1. https://blog.csdn.net/dangzhangjing97/article/details/81008836)
+2. https://www.brianstorti.com/tcp-flow-control/
+3. https://www.geeksforgeeks.org/tcp-congestion-control/ -->> https://www.youtube.com/watch?v=cPLDaypKQkU
+4. https://www.youtube.com/watch?v=4l2_BCr-bhw
 
 ## 4. 三次握手四次挥手
 
-看：https://blog.csdn.net/qq_38950316/article/details/81087809
+看：
+
+1. https://blog.csdn.net/qq_38950316/article/details/81087809
+2. https://www.youtube.com/watch?v=xMtP5ZB3wSk
 
 ## 5. TCP sticking/unpacking 粘包，拆包及解决方法
 
@@ -202,3 +210,22 @@ net.ipv4.tcp_fin_timeout 修改系默认的 TIMEOUT 时间
    - 分用：当传输层从网络层接收数据后，必须将数据正确递交给某个应用程序。也就是传输层曾能够区分不同进程的数据并且加以区分处理。可靠数据传输，比如传输层的 TCP 协议，提供了面向连接的，可靠的，具有拥塞控制的协议，这是为了弥补网络层不足所建立的。
 
 2. 此外，传输层还有寻址的功能，定位应用程序在哪里。以及流量的控制，防止接收端速度太慢造成溢出和丢包的现象。流量控制和拥塞控制的区别是：流量控制只是端端之间，只需要管理两个端之间的流量传输即可，也就是局部的。但是拥塞控制是全局的，是整个网络所做的事情，需要所有的路由器主机一起努力完成的事情。在传输层，既有流量控制也有拥塞控制。
+
+### 9. video streaming -->> youtube streaming using tcp or udp
+
+![alt_text](../image/video_streaming.jpg)
+
+1. UDP Streaming
+
+because UDP does not employ a congestion-control mechanism, the server can push packets into the network at the consumption rate of the video without the rate-control restrictions of TCP. UDP streaming typically uses a small client-side buffer, big enough to hold less than a second of video.
+
+Before passing the video chunks to UDP, the server will encapsulate the video chunks within transport packets specially designed for transporting audio and video, using the Real-Time Transport Protocol (RTP)
+
+2. HTTP Streaming (over tcp)
+
+In HTTP streaming, the video is simply stored in an HTTP server as an ordinary file with a specific URL. When a user wants to see the video, the client establishes a TCP connection with the server and issues an HTTP GET request for that URL. The server then sends the video file, within an HTTP response message, **as quickly as possible, that is, as quickly as TCP congestion control and flow control will allow.** On the client side, the bytes are collected in a client application buffer. Once the number of bytes in this buffer exceeds a predetermined threshold, the client application begins playback—specifically, it periodically grabs video frames from the client application buffer, decompresses the frames, and displays them on the user’s screen.
+
+3. Dynamic Adaptive Streaming over HTTP (DASH)
+
+In DASH, the video is encoded into several different versions, with each version having a different bit rate and, correspondingly, a different quality level. The client dynamically requests chunks of video segments of a few seconds in length. When the amount of available bandwidth is high, the client naturally selects chunks from a high-rate version; and when the available bandwidth is low, it naturally selects from a low-rate version. The client selects different chunks one at a time with HTTP GET request
+messages
