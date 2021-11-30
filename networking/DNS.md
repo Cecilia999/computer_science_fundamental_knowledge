@@ -4,7 +4,13 @@
 
 DNS 是 Domain Name Service 域名服务。它作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网(ip 地址不好记，域名容易记)
 
-## 2. DNS 域名解析过程
+Domain Name Systems(DNS) maps domain names With Internet Protocol(IP) address thus helping computer for translating human-readable(domain name)to machine readable language(IP address)
+
+## 2. DNS lookup process/ how the dns query process work
+
+1. https://www.cloudflare.com/learning/dns/what-is-dns/
+2. https://www.freshersemploy.com/dns-interview-questions-answers/
+3. https://tutorialmastery.com/dns-interview-questions/
 
 通过域名，最终得到该域名对应的 IP 地址的过程叫做域名解析
 ![alt text](../image/域名解析.jpg)

@@ -30,12 +30,18 @@
 
 14. Deliver Results - Leaders need to focus on the critical things in their work and deliver quality results promptly. No matter what, they overcome obstacles and never settle.
 
-## STAR technique
+## tip for answering bq question
+
+### 1. be specific using S.T.A.R technique
 
 S - situation you were in
 T - Task need to do, brief
 A - Action you took, detail
 R - Result of your actions
+
+### 2. Make situation pressurized (by adding a time factor/aggravating factor)
+
+### 3. Demonstrate you can work alone to solve the problem
 
 ## Tell me about a time when you disaggree with your boss
 
@@ -47,4 +53,6 @@ Action: I explained to my boss that how much work we need to do for the database
 
 Result: I could fully understand his decision and it turns out to be the right decision because the changes related to database refinement is not as much as I thought and it also made our later features design easier.
 
-## Tell me about a time you solve a complex problem with a simple solution
+## Tell me about a time you solve a difficult problem / diffcult cituation
+
+Situation:

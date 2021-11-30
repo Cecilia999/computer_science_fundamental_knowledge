@@ -41,6 +41,9 @@ TCP 的可靠传输基本上都可以在 TCP 20B 的头部体现
 
 ### 5.1 TCP does not preserves message boundaries 无边界保护
 
+看：
+https://programmer.ink/think/tcp-packet-sticking-unpacking.html
+
 我们都知道，TCP 协议是面向流的。**面向流是指无保护消息边界的**，如果发送端连续发送数据，接收端有可能在一次接收动作中会接收两个或者更多的数据包。
 
 那什么是保护消息边界呢？就是指传输协议把数据当做一条独立的消息在网上传输，接收端只能接收独立的消息。也就是说存在保护消息边界，接收端一次只能接收发送端发出的一个数据包。
@@ -113,7 +116,7 @@ TCP 的可靠传输基本上都可以在 TCP 20B 的头部体现
 2. udp 的头部只有 8 byte，tcp 有 20byte
 3. UDP 连接没有 TCP 的三次握手、确认应答、超时重发、流量控制、拥塞控制等机制，而且 UDP 是一个无状态的传输协议，所以它在传递数据时非常快。
 4. udp 面向报文，tcp 面向字节流，所以 udp 不会有拆包粘包的问题
-5. udp 支持一对一、一对多、多对一和多对多的交互通信。tcp 是点对点的传输层协议
+5. udp 支持一对一、一对多、多对一和多对多的交互通信 half-duplex。tcp 是点对点的传输层协议
 
 ## 2.为什么 UDP 不可靠
 
@@ -159,6 +162,16 @@ SYN 攻击即利用 TCP 协议缺陷，通过发送大量的半连接请求，�
 
 1. 缩短 SYN Timeout 时间
 2. 记录 IP，若连续受到某个 IP 的重复 SYN 报文，从这个 IP 地址来的包会被一概丢弃。
+
+This TCP connection management protocol sets the stage for a classic Denial of Service (DoS) attack known as the SYN flood attack. In this attack, the attacker(s) send a large number of TCP SYN segments, without completing the third handshake step. With this deluge of SYN segments, the server’s connection resources become exhausted as they are allocated (but never used!) for half-open connections; legitimate clients are then denied
+service.
+
+Solution: SYN cookies
+
+When the server receives a SYN segment, it does not know if the segment is coming from a legitimate user or is part of a SYN flood attack. So, instead of creating a half-open TCP connection for this SYN, the server creates an initial TCP sequence number that is a complicated function (hash function) of source and destination IP addresses and port numbers of the SYN segment, as well as a secret number only known to the server. This carefully crafted initial sequence number is the so-called “cookie.” The server then sends
+the client a SYN_ACK packet with this special initial sequence number. Importantly, the
+server does not remember the cookie or any other state information corresponding to the
+SYN.
 
 ### 6. 网络中（服务器端）大量的 TIME_WAIT
 
