@@ -1,20 +1,26 @@
 # cookie / seesion / token
 
-## 1. 会话跟踪技术
+## 1. Session Tracking 会话跟踪技术
+
+HTTP is a stateless protocol. This means a HTTP server needs not keep track of any state information.
+
+So, At any time, client can send any valid request. The server will not relate this request to any previous or future request. Each request is independent of any other request, past or future.
+
+But there are some user case / scenario that we need to keey track of the client state, which make cookie come to exsit.
 
 HTTP 是无状态协议，是指 http 对于历史请求没有记忆能力，一旦数据交换完毕，客户端与服务器端的连接就会关闭，再次交换数据需要建立新的连接。这就意味着服务器无法从连接上跟踪会话。但是一些场景又需要保存信息（比如在线购物网站，需要登录的网站等等，需要会话管理。记住哪些人登录系统， 哪些人往自己的购物车中放商品），这里就衍生出来了 cookie、session、token
 
-## 1.1 发展史
+## 1.1 development history
 
 1、很久很久以前,Web 基本上就是文档的浏览而已,既然是浏览,作为服务器,不需要记录谁在某一段时间里都浏览了什么文
 档,每次请求都是一个新的 HTP 协议,就是请求加响应,尤其是我不用记住是谁刚刚发了 HTTP 请求,每个请求对我来说都是全
 新的。这段时间很嗨皮
 
 2、**session**:
-但是随着交互式 Web 应用的兴起,像在线购物网站,需要登录的网站等等,马上就面临一个问题,那就是要管理会话,必须记住
-哪些人登录系统,哪些人往自己的购物车中放商品,也就是说我必须把每个人区分开,这就是一个不小的挑战,因为 HTTP 请求是
-无状态的,所以想出的办法就是给大家发一个会话标识( session id),说白了就是一个随机的字串,每个人收到的都不ー样,每次大家
-向我发起 HTTP 请求的时候,把这个字符串给一并捎过来,这样我就能区分开谁是谁了
+
+但是随着 interactive Web 应用的兴起,像在线购物网站,需要登录的网站等等,马上就面临一个问题,那就是要管理会话,必须记住哪些人登录系统,哪些人往自己的购物车中放商品,也就是说我必须把每个人区分开,这就是一个不小的挑战,因为 HTTP 请求是无状态的,
+
+所以想出的办法就是给大家发一个会话标识( session id),说白了就是一个随机的字串,每个人收到的都不ー样,每次大家向 server 发起 HTTP 请求的时候,把这个字符串给一并捎过来,这样 server 就能区分开谁是谁了
 
 3、**session sticky & session 复制**:
 
@@ -48,26 +54,47 @@ HTTP 是无状态协议，是指 http 对于历史请求没有记忆能力，一
 
 ## 2. Cookie
 
-Http cookie（也叫 Web Cookie 或浏览器 Cookie）**是服务器发送到用户浏览器以 Key-Value 形式井保存在本地（可以在内存、也可以持久化在磁盘里）的文本数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上**。通常，它用于告知服务端两个请求是否来自同一浏览器，如保持用户的登录状态。Cookie 使基于无状态的 HTTP 协议记录稳定的状态信息成为了可能。
+### 2.1 what is cookie?
+
+A cookie is information that a Website puts on your hard disk so that it can remember something about you at a later time. (More technically, it is information for future use that is stored by the server on the client side of a client/server communication.)
+
+In short, Cookie is client’s information for particular site stored on client’s PC.
+
+Typically, a cookie records your preferences when using a particular site. Using the Web’s Hypertext Transfer Protocol (HTTP), each request for a Web page is independent of all other requests. For this reason, the Web page server has no memory of what pages it has sent to a user previously or anything about your previous visits. A cookie is a mechanism that allows the server to store its own information about a user on the user’s own computer.
+
+Http cookie（也叫 Web Cookie 或浏览器 Cookie）**是服务器发送到用户浏览器以 Key-Value 形式井保存在本地（可以在内存、也可以持久化在磁盘里）的文本数据，它会在浏览器下次向同一服务器再发起请求时被携带并发送到服务器上**。通常，它用于告知服务端两个请求是否来自同一浏览器，如保持用户的登录状态/track user preference to show related content for particular site。Cookie 使基于无状态的 HTTP 协议记录稳定的状态信息成为了可能。
 
 由于 cookie 是存在客户端上的，所以浏览器加入了一些限制确保 cookie 不会被恶意使用，同时不会占据太多磁盘空间。所以每个域的 cookie 数量是有限制的。
 
-### 2.1 cookie 的作用
+1. A cookie is a small text file that is stored on the user's computer. The maximum file size of a cookie is 4KB. It is also known as an HTTP cookie, web cookie, or internet Cookie.
+2. Whenever a user visits a website for the first time, the site sends packets of data in the form of a cookie to the user's computer.
+3. The cookies help the websites to keep track of the user's browsing history or cart information when they visit their sites.
+4. It stores only the "String" data type.
+5. The information stored within cookies is not secure because this information is stored in text-format on the client-side, which can be read by anyone.
+6. We can enable or disable the cookies as per the requirement.
+7. The cookies generated by a user are only be shown to them, and no other user can see those cookies.
+8. Cookies are created and shared between the server and browser with the help of an HTTP header.
+9. The path where the cookies are saved is decided by the browser, as Internet explorer usually stored them in Temporal Internet File Folder.
+10. When we visit YouTube channel and search for some songs, next time whenever we visit YouTube, cookies read our browsing history and shows similar songs or last played songs.
 
-- **会话状态管理**（如用户登录状态、购物车、视频从上次离开位置播放、游戏分数或其它需要记录的信息）
-- **个性化设置**（如用户自定义设置、主题等）
-- **浏览器行为跟踪**（如跟踪分析用户行为等）
+### 2.2 Procedure of how cookie works
 
-Cookie 曾一度用于客户端数据的，因当时并没有其它合适的存储办法而作为唯一的存储手段，但现在随着现代浏览器开始支持各种各样的存储方式，Cookie 渐渐被淘汰。由于服务器指定 Cookie 后，浏览器的每次请求都会携带 Cookie 会带来额外的性能开销（尤其是在移动环境下）。新的浏览器 API 已经允许开发者直接将数据存储到本地，如使用 Web storage API（本地存储和会话存储）或 IndexedDB。
+1. When you visit some site, server for that site stores information (user name or simply physical address of user’s pc) in 1 text file. For that, that site may ask you to fill details about yourself or it can simple fetch physical address of your computer.
+2. Server sends this file to client with web page and that file is saved in client’s pc.
+3. Now when user visits that website again, that cookie file is also sent to server with the web page request.
+4. From that file, website’s sever can identify that particular user and do further procedures (Ex. Prepare customized webpage for that user) using that information.
 
-**cookie 的作用过程**
-首先 cookie 对于浏览器来说只是一个纯文本，浏览器的安装目录下是会有一个专门的文件夹用来保存各个网站的 cookie。当从前端发送请求到后端的时候，浏览器会自动的检测下是否有 cookie，如果有就会添加到请求的头信息中，以上是浏览器自动帮我们做的。
+**Example:** - Best example for working of cookies is “iGoogle” website. Follow these steps to see it:
 
-存储到 cookie 中的数据，浏览器会自动的放在 http 请求中，只有是每次请求都必须要发送给服务器的数据才会放到 cookie，比如身份验证信息。如果是不必要的，必然会增加网络开销。针对这个存储信息大小，cookie 还是做了一些限制的。每个域名下的 cookie 的大小最大为 4KB，每个域名下的 cookie 数量最多为 20 个（但很多浏览器厂商在具体实现时支持大于 20 个）。
+1. Visit www.google.com.
+2. Click on link written ‘iGoogle’ on top-right side of the page. You will see customized page of google. (When you click on this link, Physical address (Mind you…physical address which always remains unique. While IPaddress of your pc may change) of your pc is stored in google’s server)
+3. You can customize that page according to your need and that page information is saved in one text file and sent back to client’s pc.
+4. Close that window.
+5. Again go to IE and visit www.google.com. You will see customized page you have created before. This is because when you visit same page again, your pc send that cookie also with webpage request. Google server resolve that file and come to know that that client is having customized page and send that customized page instead of normal page
 
-cookie 的属性包括：过期时间；域名、路径等等，这些可以自己设置，如果不手动设置就会使用 cookie 的默认设置。
+(Clear cookies from your pc and visit the same page and see what happens!!!!!!)
 
-### 2.2 设置
+### 2.3 Creat cookie
 
 1. 客户端设置
 
@@ -94,15 +121,15 @@ expires, domain, path, secure(只有在 https 协议的网页中, 客户端设�
 服务器使用 set-Cookie 响应首部向用户代理（一般是浏览器）发送 Cookie 信息，告知客户端保存 Cookie 信息。一个简单的 Cookie 可能像这样：Set-Cookie：<cookie 名>=<cookie 值>
 ![alt text](../image/cookie.jpg)
 
-### 2.3 cookie  类型
+### 2.3 Types of Cookies
 
-1. 会话期 Cookie
+1. Session Cookie
 
-会话期 Cookie 是最简单的 Cookie：浏览器关闭之后它会被自动删除，也就是说它仅在会话期内有效。会话期 Cookie 不需要指定过期时间（Expires）或者有效期（Max-Age）要注意的是，有些浏览器提供了会话恢复功能，这种情况下即使关闭了浏览器，会话期 Cookie 也会被保留下来，就好像浏览器从来没有关闭一样。
+The session cookie is stored in temporary memory and is not retained/will be erased after the browser is closed. Session cookies do not collect information from yourcomputer. They typically will store information in the form of a session identification that does not personally identify the user.persistent cookie
 
-2. 持久性 Cookie
+2. Persistent Cookie
 
-和关闭浏览器便失效的会话期 Cookie 不同，持久性 Cookie 可以指定一个特定的过期时间（Expires 或有效期（Max-Age）
+a cookie that is stored on your hard drive until it expires (persistent cookies are set with expiration dates) or until you delete the cookie. Persistent cookies are used to collect identifying information about the user, such as Web surfing behavior or user preferences for a specific Web site.
 
 提示：当 Cookie 的过期时间被设定时，设定的日期和时间只与客户端相关，而不是服务端
 
@@ -110,40 +137,45 @@ expires, domain, path, secure(只有在 https 协议的网页中, 客户端设�
 
 每个 Cookie 都会有与之关联的域（Domain），如果 Cookie 的域和页面的域相同，那么我们称这个 Cookie 为第一方 Cookie（first-party cookie），如果 Cookie 的域和页面的域不同，则称之为第三方 Cookie（third-party cookie.）。一个页面包含图片或存放在其他域上的资源（如图片广告）时，第一方的 Cookie 也只会发送绐设置它们的服务器。通过第三方组件发送的第三方 Cookie 主要用于广告和网络追踪。这方面可以看谷歌使用的 Cookie 类型（types of cookies used by Google）。大多数浏览器默认都允许第三方 Cookie，但是可以通过附加组件来阻止第三方 Cookie（如 EF 的 Privacy Badger）
 
-## 3. session
+## 3. Session
+
+### 3.1 what is session
+
+1. A session is client information store at server side temperary memory for future use. It is commonly used to distinguise clients by session ID (random string). The user session starts when user log-in to a particular netowork application and ends when the user logs-out/shutdowns the system. It works
+
+2. Session values are much secured as these are stored in binary form or encrypted form and can only be decrypted at the server. The session values are automatically removed when the user shutdowns the system or logout from the application. To store the values permanently, we need to store them in the database.
+
+3. Each session is unique for each user, and any number of sessions can be used in an application; there is no limitation to it.
+
+4. The user is identified with the help of sessionID, which is a unique number saved inside the server. It is saved as a cookie, form field, or URL.
 
 session 从字面上讲，就是会话。这个就类似你和一个人交谈，你怎么知道当时和你交谈的是张三而不是李四呢？对方肯定有某种特征（长相等）表明他是张三；
-
 session 也是类似的道理，**服务器要知道当前请求发给自己的是谁。为了做这种区分，服务器就是要给每个客户端分配不同的"身份标识"，然后客户端每次向服务器发请求的时候，都带上这个”身份标识“**，服务器就知道这个请求来自与谁了。
 
 至于客户端怎么保存这个”身份标识“，可以有很多方式，对于浏览器客户端，大家都采用 cookie 的方式。
 
-### 3.1 过程
+### 3.2 Working of session
 
 ![alt text](../image/session的过程.jpg)
 
-1. 用户向服务器发送用户名和密码
+1. In the first step, the client request to the server via GET or POST method.
 
-2. 服务器验证通过后,在当前对话(session)里面保存相关数据,比如用户角色, 登陆时间等;
+2. The sessionID is created on the server, and it saves the sessionID into the database. It returns the sessionId with a cookie as a response to the client.
 
-3. 服务器向用户返回一个`session_id`, 写入用户的`cookie`
+3. Cookie with sessionID stored on the browser is sent back to the server. The server matches this id with the saved sessionID and sends a response HTTP200
 
-4. **用户随后的每一次请求，自动判断此域名下是否存在 `cookie` 信息, 如果存在都会通过`cookie`, 将`session_id`传回服务器**
+### 3.3 Session scalability problem
 
-5. 服务端收到 `session_id`, 找到前期保存的数据, 由此得知用户的身份
-
-### 3.2 扩展性
-
-单机当然没问题， **如果是服务器集群， 或者是跨域的服务导向架构， 这就要求 session 数据共享，每台服务器都能够读取 session**，否则假设张三的 session id 只保存在一台服务器 a 上，下次张三的请求发到了服务器 b，b 却没有 a 的 session id 怎么办？
+**server clutering / Web and application servers can scale out to handle huge loads with devices such as load balancers, which also provide redundancy. 这就要求 session 数据共享，每台服务器都能够读取 session**，否则假设张三的 session id 只保存在一台服务器 a 上，下次张三的请求发到了服务器 b，b 却没有 a 的 session id 怎么办？
 
 另一种情况， A 网站和 B 网站是同一家公司的关联服务。现在要求，用户只要在其中一个网站登录，再访问另一个网站就会自动登录，请问怎么实现？这个问题就是**如何实现单点登录的问题**
 
 **解决方案：**
 
-1. Session sticky：
+1. Session Sticky：
    Nginx ip_hash 策略，服务端使用 Nginx 代理，**每个请求按访问 IP 的 hash 分配，这样来自同一 IP 固定访问一个后台服务器**，避免了在服务器 A 创建 Session，第二次分发到服务器 B 的现象。
 
-2. Session 复制：
+2. Session Copy：
    **任何一个服务器上的 Session 发生改变（增删改），该节点会把这个 Session 的所有内容序列化，然后广播给所有其它节点。**
    ![alt text](../image/session复制.jpg)
 
@@ -151,10 +183,10 @@ session 也是类似的道理，**服务器要知道当前请求发给自己的�
    **将 Session Id 集中存储到一个地方**，所有的机器都来访问这个地方的数据，将用户的 Session 等信息使用缓存中间件来统一管理，保障分发到每一个服务器的响应结果都一致。这种方案的优点是架构清晰，缺点是工程量比较大。另外，持久层万一挂了，就会单点失败；
    ![alt text](../image/共享session.jpg)
 
-4. 用 token 代替 session：
+4. **用 token 代替 session**：
    另一种方案是服务器索性不保存 session 数据了，所有数据就保存在客户端，每次请求都发回服务器。这种方案就是接下来要介绍的基于 Token 的验证;
 
-### 3.3 获取 session 对象
+### 3.4 获取 session 对象
 
 ```js
 HttpSession session = request.getSession();
@@ -162,32 +194,38 @@ HttpSession session = request.getSession();
 
 ## 4. Token
 
+see: https://sherryhsu.medium.com/session-vs-token-based-authentication-11a6c5ac45e4
+
 ![alt text](../image/token的过程.jpg)
 
-1. 客户端使用用户名和密码请求登录。
+1. client 使用用户名和密码请求登录。
 2. 服务端收到请求，验证用户名和密码。
-3. 验证成功后，服务端会生成一个 token，然后把这个 token 发送给客户端。
-4. 客户端收到 token 后把它存储起来，可以放在 cookie 或者 Local Storage（本地存储）里。
-5. 客户端每次向服务端发送请求的时候都需要带上服务端发给的 token。
-6. 服务端收到请求，然后去验证客户端请求里面带着 token，如果验证成功，就向客户端返回请求的数据。(如果这个 Token 在服务端持久化（比如存入数据库），那它就是一个永久的身份令牌。)
+3. 验证成功后，服务端会生成一个 token，然后把这个 token 发送给 client。
+4. client 收到 token 后把它存储起来，可以放在 cookie 或者 Local Storage（本地存储）里。
+5. client 每次向服务端发送请求的时候都需要带上服务端发给的 token。
+6. 服务端收到请求，然后去验证 client 请求里面带着 token，如果验证成功，就向 client 返回请求的数据。(如果这个 Token 在服务端持久化（比如存入数据库），那它就是一个永久的身份令牌。)
 
 ## 5. 常见面试题
 
-### cookie 和 session 原理及区别
+### 5.1 Key Differences between Session and Cookies
 
-Cookie 和 Session 有什么不同？
-
-- 存在的位置: Cookie 存在于客户端（浏览器）的临时文件夹中，Session 存在于服务器的内存中。
-- 存取方式的不同，Cookie 只能保存 ASCII，Session 可以存任意数据类型，一般情况下我们可以在 Session 中保持一些常用变量信息，比如说 UserId 等。
-- session 会在一定时间内保存在服务器上。当访问增多，就会比较占用你服务器的性能，考虑到减轻服务器性能方面，应当使用 cookie
-- 安全性：Cookie 存储在客户端，比较容易遭到不法获取，早期有人将用户的登录名和密码存储在 Cookie 中导致信息被窃取；Session 存储在服务端，安全性相对 Cookie 要好一些。
-- 存储大小不同， 单个 Cookie 保存的数据不能超过 4K，Session 可存储数据远高于 Cookie。
+- Storage location:
+  Sessions are server-side files that store the user information, whereas Cookies are client-side files that contain user information on a local computer.。
+- file type:
+  Cookie 只能保存 ASCII，Session 可以存任意数据类型，一般情况下我们可以在 Session 中保持一些常用变量信息，比如说 UserId 等。
+- Sessions are cookies dependent, whereas Cookies are not dependent on Session.
+- end time:
+  The session ends when the user closes the browser or logout from the application, whereas Cookies expire at the set time.
+- Security:
+  Sessions are more secured compared to cookies, as they save data in encrypted form. Cookies are not secure, as data is stored in a text file, and if any unauthorized user gets access to our system, he can temper the data.
+- Size:
+  The maximum size of the browser's cookies is 4 KB.
 
 ### token 和 session 区别
 
-Session 是一种 HTTP 储存机制， 为无状态的 HTTP 提供持久机制;
+Session 是一种 HTTP 储存 mechanism，为无状态的 HTTP 提供持久机制;
 
-Token 就是令牌， 比如你授权(登录)一个程序时，它就是个依据，判断你是否已经授权该软件；
+Token 就是 identification， 比如你授权(登录)一个程序时，它就是个依据，判断你是否已经授权该软件；
 
 Session 和 Token 并不矛盾，作为身份认证**Token 安全性比 Session 好**，因为每一个请求都有签名还能防止监听以及重放攻击，而 Session 就必须依赖链路层来保障通讯安全了。如上所说，如果你需要实现有状态的回话，仍然可以增加 Session 来在服务端保存一些状态。
 
