@@ -1,14 +1,22 @@
 # Operating System
 
-https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/
+1. https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/
 
-### 1. [Process vs Thread 线程和进程](进程_线程.md)
+## 1.
 
-### 2. [IPC - InterProcess Communication 进程通信](interprocess_communication.md)
+## 2.
 
-### 3. [Process scheduling 进程调度](process_scheduling.md)
+## 3. Process Management
 
-### 4. [Linux](linux.md)
+### 3.1 [Process](Process.md)
+
+### 3.2 [Thread]()
+
+## 4. [Memory Management]())
+
+## 5. [Stroage Management]()
+
+## 6. [Protection and Security]()
 
 ## 常见面试题
 

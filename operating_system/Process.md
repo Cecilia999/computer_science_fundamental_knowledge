@@ -1,0 +1,240 @@
+# Processes
+
+1. https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/3_Processes.html
+2. 进程管理 Process_Scheduling: https://blog.csdn.net/weixin_37289816/article/details/55518203
+
+## 3.1 Process Concept
+
+### 3.1.1 The Process
+
+#### 1. what is the process?
+
+- A process is an instance of a program in execution.
+
+#### 2. Process memory is divided into 4 sections
+
+1. text --->>> comprises the compiled program code, read in from **non-volatile storage** when the program is launched.
+2. data --->>> store global/static variable, allocated and initialized prior to executing main.
+3. heap --->>> is used for dynamic memory allocation, and is managed via calls to new, delete, malloc, free, etc.
+4. stack --->>> is used for local variables. Space on the stack is reserved for local variables when they are declared and the space is freed up when the variables go out of scope. Stack is also used for function return values. The exact machanisms of stack management may be language specific.
+
+**NOTE:**
+
+1.  stack and the heap start at opposite ends of the process's free space and grow towards each other. If they should ever meet, then either a stack overflow error will occur, or else a call to new or malloc will fail due to insufficient memory available.
+
+2.  **Non-volatile memory (NVM) or non-volatile storage** is a type of computer memory that can retain stored information even after power is removed. In contrast, volatile memory needs constant power in order to retain data. 非易失性存储器（英语：non-volatile memory，缩写为 NVM）是指当电流关掉后，所存储的数据不会消失的电脑存储器。非易失性存储器中，依存储器内的数据是否能在使用电脑时随时改写为标准，可分为二大类产品，即 ROM 和 Flash memory。
+
+3.  ROM (Read-Only Memory) 只读储存器，一旦储存资料就无法修改和删除，且内容不会因为电源关闭而消失。一般用于 pc 的 BIOS(Basic Input/Output System). It is restricted to reading words that are permanently stored within the unit. The manufacturer of ROM fills the programs into the ROM at the time of manufacturing the ROM.
+
+4.  flush memory 闪存 is an electronic non-volatile computer memory storage medium that can be electrically erased and reprogrammed.
+
+### 3.1.2 Process State
+
+1. New - The process is in the stage of being created.
+2. Ready - The process has all the resources available that it needs to run, but the CPU is not currently working on this process's instructions.
+3. Running - The CPU is working on this process's instructions.
+4. Waiting - The process cannot run at the moment, because it is waiting for some resource to become available or for some event to occur. For example the process may be waiting for keyboard input, disk access request, inter-process messages, a timer to go off, or a child process to finish.
+5. Terminated - The process has completed.
+
+### 3.1.3. Process Control Block
+
+1. Process State - Running, waiting, etc., as discussed above.
+2. Process ID, and parent process ID.
+3. CPU registers and Program Counter - These need to be saved and restored when swapping processes in and out of the CPU.
+4. CPU-Scheduling information - Such as priority information and pointers to scheduling queues.
+5. Memory-Management information - E.g. page tables or segment tables.
+6. Accounting information - user and kernel CPU time consumed, account numbers, limits, etc.
+7. I/O Status information - Devices allocated, open file tables, etc.
+
+**NOTE:**
+
+1. what is CPU registers?
+   A processor register is a quickly accessible location available to a computer's processor. 寄存器是 CPU 内部用来存放数据的一些小型存储区域，用来暂时存放参与运算的数据和运算结果。
+
+2. what is Program Counter?
+   Program Counter is one of the CPU register that manages the memory address of the instruction to be executed next.
+
+## 3.2 Process Scheduling
+
+1. two main objectives(目的) of process scheduling system are:
+   - keep cpu busy at all times
+   - deliver in "acceptable" response times for all programs
+2. So process scheduler must meet these objective by implementing suitable polices for swapping processes in and out of the CPU
+
+### 3.2.1 Scheduling Queues
+
+1. **job queue**: All process are stored in **job queue**.
+2. **Ready queue**: Processes in the Ready state are placed in the **ready queue**.
+3. **I/O queue**: Processes waiting for a device to become available or to deliver data are placed in **device queues**. There is generally a separate device queue for each device.
+
+![queue_scheduling](../image/queue_scheduling.jpg)
+
+A new process is initially put in ready queue. It is wait there until it is selected for execution or is **dispatched**. Once the process is allocated in CPU and is executing, one of the serveral events could occur:
+
+1. The process could issue an I/O request and then be placed in an I/O queue
+2. The process could create a new subprocess(child process) and wait for the subprocess's termination
+3. The process could be removed forcibly from the CPU, as a result of an interrupt, and be put back in the ready queue
+
+### 3.2.2 Schedulers
+
+A process migrates amoung vairous scheduling queue throughout its lifetime and this is done by appropriate scheduler base on some fashion(rules).
+
+1. **long-term scheduler/job scheduler**:
+
+   - in a batch system, more processes are submitted than can be executed immediately. These processes are spooled to a mass-storage device (typically a disk), where they are kept for later execution.
+   - **The long-term scheduler select processes from disk and load them into memory for execution**
+   - run infrequently, in minutes
+
+2. **short-term scheduler/CPU scheduler**:
+
+   - selects from among the processes that are ready to execute and allocates the CPU to one of them
+   - runs very frequently, on the order of 100 milliseconds, and must very quickly swap one process out of the CPU and swap in another one.
+
+3. **Medium-term Scheduling**
+
+   - When system loads get high, this scheduler will swap one or more processes out of the ready queue system for a few seconds, in order to allow smaller faster jobs to finish up quickly and clear the system.
+
+### 3.2.3 Context Switch
+
+#### 1. what is context switch?
+
+save state for current running process and restore for next ready to run process.
+
+happens when:
+
+1. Whenever an interrupt arrives, context switch occurs. the CPU must do a state-save of the currently running process, then switch into kernel mode to handle the interrupt, and then do a state-restore of the interrupted process.
+2. When the time slice for one process has expired and a new process is to be loaded from the ready queue.
+
+save and restore content:
+
+1. all register and program counter
+2. PCB (process control block)
+
+## 3.3 Operations on Processes
+
+### 3.3.1 Process Creation
+
+1. Process can create child process through appropriate system call such as fork(), spawn(), forkserver().
+
+   > difference between fork(), spawn(), forkserver(): https://stackoverflow.com/questions/64095876/multiprocessing-fork-vs-spawn
+
+2. [fork():](../linux/fork.md)
+
+   - fork() will generate a child process, which effectively identical to the parent process.
+   - All resources of the parent are inherited by the child process, including all variables/register/program counter.
+   - **BUT** fork does not copy the parent process's threads. **---->>>>** Thus locks (in memory) that in the parent process were held by other threads are stuck in the child without owning threads to unlock them, ready to cause a deadlock when code tries to acquire any of them. Also any native library with forked threads will be in a broken state.
+
+3. Each process is given an integer identifier, termed its process identifier, or PID. The parent PID ( PPID ) is also stored for each process.
+
+4. On UNIX system, the process scheduler is termed **sched**, and is given **PID 0**. The first thing it does at system startup time is to launch **init**, which gives that process **PID 1**. Init then launches all system daemons and user logins, and becomes the ultimate parent of all other processes.
+
+5. Depending on system implementation, a child process may receive some amount of shared resources with its parent. Child processes may or may not be limited to a subset of the resources originally allocated to the parent, preventing creation of too many child process overload system resource.
+
+6. There are two options for the parent process after creating the child:
+
+- Wait for the child process to terminate before proceeding. The parent makes a **wait()** system call, for either a specific child or for any child, which causes the parent process to block until the **wait()** returns. UNIX shells normally wait for their children to complete before issuing a new prompt.
+
+- Run concurrently with the child, continuing to process without waiting. This is the operation seen when a UNIX shell **runs a process as a background task**. It is also possible for the parent to run for a while, and then wait for the child later, which might occur in a sort of a parallel processing operation. ( E.g. the parent may fork off a number of children without waiting for any of them, then do a little work of its own, and then wait for the children. )
+
+7. Two possibilities for the address space of the child relative to the parent:
+
+- The child may be an exact duplicate of the parent, sharing the same program and data segments in memory. Each will have their own PCB, including program counter, registers, and PID. This is the behavior of the **fork()** system call in **UNIX**.
+
+- The child process may have a new program loaded into its address space, with all new code and data segments. This is the behavior of the **spawn()** system calls in **Windows**. **UNIX** systems implement this as a second step, using the **exec()** system call.
+
+8. Process IDs can be looked up any time for the current process or its direct parent using the **getpid()** and **getppid()** system calls respectively.
+
+### 3.3.2 Process Termination
+
+1. Processes may request their own termination by making the **exit()** system call. **exit()** will return a int and this int will pass to its parent if the parent process is doing a **wait()** system call.
+
+2. Processes may also be terminated by the system for a variety of reasons, including:
+
+- The necessary system resources is inable to deliver.
+- In response to a **KILL** command, or other unhandled process interrupt.
+- A parent may kill its children if the task assigned to them is no longer needed.
+- Its parent process is terminated (On UNIX systems, orphaned processes are generally inherited by init, which then proceeds to kill them. The UNIX **nohup** command allows a child to continue executing after its parent has exited.)
+
+3. When a process terminates, all of its system resources are freed up, open files flushed and closed, etc. The process termination status and execution times are returned to the parent if the parent is waiting for the child to terminate, or eventually returned to init if the process becomes an orphan. ( Processes which are trying to terminate but which cannot because their parent is not waiting for them are termed **zombies**. These are eventually inherited by init as orphans and killed off. )
+
+### 1.2 Process vs Thread 进程与线程之间有什么区别
+
+1. 程序: 说起进程,就不得不说下程序。程序是指令和数据的有序集合,其本身没有任何运行的含义,是一个静态的概念。
+2. 进程: 而进程则是执行程序的一次执行过程,它是一个动态的概念。是系统进行资源分配的基本单位，是操作系统结构的基础。
+3. 线程: 通常在一个进程中可以包含若千个线程,当然一个进程中至少有一个线程,不然没有存在的意义。线程是 CPU 调度和执行的的单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。
+
+**注意**:很多多线程是模拟出来的,真正的多线程是指有多个 cpu,即多核,如服务 。如果是模拟出来的多线程,即在一个 cpu 的情况下,在同一个时间点,cpu 只能 执行一个代码,因为切换的很快,所以就有同时执行的错局。
+
+**进程和线程的主要差别在于它们是不同的操作系统资源管理方式。**
+
+1. 进程是操作系统资源分配的最小单位，线程是 CPU 任务调度的最小单位。一个进程可以包含多个线程。
+2. 不同进程间数据很难共享，同一进程下不同线程间数据很易共享。
+3. 每个进程都有独立的代码和数据空间，进程要比线程消耗更多的计算机资源，一个进程崩溃后，在保护模式下不会对其它进程产生影响。线程可以看做轻量级的进程，同一类线程共享代码和数据空间，每个线程都有自己独立的 stack 运行栈和 program counter 程序计数器，线程之间切换的开销小，但线程之间没有单独的**地址空间**，一个线程死掉就等于整个进程死掉，所以多进程的程序要比多线程的程序健壮，但在进程切换时，耗费资源较大，效率要差一些。但对于一些要求同时进行并且又要共享某些变量的并发操作，只能用线程，不能用进程。
+
+## 2. 进程的结构 = 线程+内存+文件/网络句柄
+
+进程 = 线程 + Memory (typically some region of virtual memory) _逻辑内存_ +file descriptor/handles(windows) _文件/网络句柄_
+
+- “内存”：  
+  我们通常所理解的内存是我们所见到的(2G/4G/8G/16G)物理内存，这里的内存是逻辑内存。指的是内存的寻址空间。每个进程的内存是相互独立的。（否则：我们把指针的值改一改就指向其他进程的内存了，通过这样我们岂不是就可以看到其他进程中"微信"或者是"网上银行"的信息）
+
+- “文件/网络句柄”  
+  它们是所有的进程所共有的，例如打开同一个文件，去抢同一个网络的端口这样的操作是被允许的。
+
+## 3. 线程的结构 = (栈+PC+TLS)
+
+- 栈  
+  用来储存函数的参数和返回的地址
+
+- Program Counter Register 程序计数器
+  操作系统真正运行的是一个个的线程， 而我们的进程只是它的一个容器 每个线程都有一串自己的指针，去指向自己当前所在内存的指针
+
+- TLS **(thread local storage)**  
+  线程自己独立的内存
+
+## 4. 线程的通信方式 -->> 主要用于线程的同步
+
+- 互斥锁 Mutual exclusion (Mutex)  
+  防止多线程同时读写同一块区域，保证资源独占
+
+- 信号量 semophore  
+  允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。一旦大于限制的数量，其他线程只能等待
+
+- 信号 signal  
+  通过通知操作的方式来保持多线程同步，还可以方便的实现多线程优先级的比较操作。
+
+参考：线程同步的几种方式->https://www.cnblogs.com/sherlock-lin/p/14538083.html
+
+## 5. [进程的通信方式](interprocess_communication.md)
+
+## 6. 进程有哪几种状态？
+
+**It is important to realize that only one process can be running on any processor at any instant. Many processes may be ready and waiting**
+
+![Alt text](../image/进程五态模型.jpg)
+
+- 就绪状态：就绪态指的是可运行，但因为其他进程正在运行而处于就绪状态，the process is waited to be assigned to a processor
+- 运行状态：运行态指的就是进程实际占用 CPU 时间片运行时
+- 阻塞状态：阻塞态又被称为睡眠态，它指的是进程不具备运行条件，正在等待被 CPU 调度。
+
+- 新建态：进程的新建态就是进程刚创建出来的时候
+  - 创建进程需要两个步骤：即为新进程分配所需要的资源和空间，设置进程为就绪态，并等待调度执行。
+- 终止态：进程的终止态就是指进程执行完毕，到达结束点，或者因为错误而不得不中止进程。
+  - 终止一个进程需要两个步骤：先等待操作系统或相关的进程进行善后处理。然后回收占用的资源并被系统删除。
+
+## 7. [process scheduling 进程调度](process_scheduling.md)
+
+## 8. 常用 linux 查看进程/线程状态的命令行
+
+1. ps
+
+   **ps 命令行的 documentation page**: https://man7.org/linux/man-pages/man1/ps.1.html
+
+   1. ` ps -a - 列出所有运行中/激活进程`
+   2.
+
+### 参考
+
+- 线程与进程简单的解释： http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html
+- 线程与进程的联系：https://juejin.cn/post/6844903801321685000
+- Processes and Threads：http://www.qnx.com/developers/docs/6.4.1/neutrino/getting_started/s1_procs.html
