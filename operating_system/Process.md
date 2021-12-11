@@ -126,7 +126,7 @@ save and restore content:
 
 3. Each process is given an integer identifier, termed its process identifier, or PID. The parent PID ( PPID ) is also stored for each process.
 
-4. On UNIX system, the process scheduler is termed **sched**, and is given **PID 0**. The first thing it does at system startup time is to launch **init**, which gives that process **PID 1**. Init then launches all system daemons and user logins, and becomes the ultimate parent of all other processes.
+4. On UNIX system, the process scheduler is termed **sched** (this is kernal process), and is given **PID 0**. The first thing it does at system startup time is to launch **init**, which gives that process **PID 1**. Init then launches all system daemons and user logins, and becomes the ultimate parent of all other processes.
 
 5. Depending on system implementation, a child process may receive some amount of shared resources with its parent. Child processes may or may not be limited to a subset of the resources originally allocated to the parent, preventing creation of too many child process overload system resource.
 
@@ -156,6 +156,193 @@ save and restore content:
 - Its parent process is terminated (On UNIX systems, orphaned processes are generally inherited by init, which then proceeds to kill them. The UNIX **nohup** command allows a child to continue executing after its parent has exited.)
 
 3. When a process terminates, all of its system resources are freed up, open files flushed and closed, etc. The process termination status and execution times are returned to the parent if the parent is waiting for the child to terminate, or eventually returned to init if the process becomes an orphan. ( Processes which are trying to terminate but which cannot because their parent is not waiting for them are termed **zombies**. These are eventually inherited by init as orphans and killed off. )
+
+## 3.4 IPC - Interprocess Communication
+
+看：https://www.guru99.com/inter-process-communication-ipc.html
+
+1. Independent Process: operating concurrently on a systems and can neither affect other processes or be affected by other processes.
+
+2. Cooperating Processes: can affect or be affected by other processes. There are several reasons why cooperating processes are allowed:
+
+- **Information Sharing**: There may be several processes which need access to the same file for information. ( e.g. pipelines. )
+- **Computation speedup**: Often a solution to a problem can be solved faster if the problem can be broken down into sub-tasks to be solved simultaneously ( particularly when multiple processors are involved. )
+- **Modularity** 模块化: The most efficient architecture may be to break a system down into cooperating modules. ( E.g. databases with a client-server architecture. )
+- **Convenience**: Even a single user may be multi-tasking, such as open many tabs in chrome, each of them is a separate process.
+
+3. Cooperating processes require some type of inter-process communication, which is most commonly one of two types: **Shared Memory systems** or **Message Passing systems**.
+
+![share_memory_and_message_passing](../image/share_memory_and_message_passing.jpg)
+
+4. Shared Memory is faster once it is set up, because no system calls are required and access occurs at normal memory speeds. However it is more complicated to set up, and doesn't work as well across multiple computers. Shared memory is generally preferable when large amounts of information must be shared quickly on the same computer.
+
+5. Message Passing requires system calls for every message transfer, and is therefore slower, but it is simpler to set up and works well across multiple computers. Message passing is generally preferable when the amount and/or frequency of data transfers is small, or when multiple computers are involved.
+
+6. check [interprocess_communication](interprocess_communication.md)
+
+### 3.4.1 Shared-Memory Systems
+
+看 Producer-Consumer Example Using Shared Memory：https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/3_Processes.html
+
+### 3.4.2 Message-Passing Systems
+
+1. Message passing systems must support at a minimum system calls for "send message" and "receive message".
+2. A communication link must be established between the cooperating processes before messages can be sent.
+3. There are three key issues to be resolved in message passing systems as further explored in the next three subsections:
+   - Direct or indirect communication ( naming )
+   - Synchronous or asynchronous communication
+   - Automatic or explicit buffering.
+
+#### 3.4.2.1 Naming
+
+1. **direct communication**: sender must know the name(path) of the receiver to to which it wishes to send a message.
+
+   - There is a one-to-one link between every sender-receiver pair.
+   - **symmetric communication**: the receiver must also know the specific name of the sender from which it wishes to receive messages.
+   - **asymmetric communications**: this is not necessary.
+
+2. **Indirect communication**: uses shared mailboxes, or ports.
+
+   - Multiple processes can share the same mailbox or boxes.
+   - Only one process can read any given message in a mailbox. Initially the process that creates the mailbox is the owner, and is the only one allowed to read mail in the mailbox, although this privilege may be transferred.
+     ( Of course the process that reads the message can immediately turn around and place an identical message back in the box for someone else to read, but that may put it at the back end of a queue of messages. )
+   - The OS must provide system calls to create and delete mailboxes, and to send and receive messages to/from mailboxes.
+
+#### 3.4.2.2 Synchronization
+
+1. **Blocking send**: The sending process is blocked until the message is received by the receiving process or by the mailbox.
+2. **Nonblocking send**: The sending process sends the message and resumes operation.
+3. **Blocking receive**: The receiver blocks until a message is available.
+4. **Nonblocking receive**: The receiver retrieves either a valid message or a null.
+
+#### 3.4.2.3 Buffering
+
+Messages are passed via queues, which may have one of three capacity configurations:
+
+1. **Zero capacity** - Messages cannot be stored in the queue, so senders must block until receivers accept the messages.
+2. **Bounded capacity**- There is a certain pre-determined finite capacity in the queue. Senders must block if the queue is full, until space becomes available in the queue, but may be either blocking or non-blocking otherwise.
+3. **Unbounded capacity** - The queue has a theoretical infinite capacity, so senders are never forced to block.
+
+## 3.5 Examples of IPC Systems
+
+## 3.6 Communication in Client-Server Systems
+
+### 3.6.1 Sockets
+
+1. A socket is an endpoint for communication.
+
+2. **Two processes communicating over a network often use a pair of connected sockets as a communication channel**. Software that is designed for client-server operation may also use sockets for communication between two processes running on the same computer - For example the UI for a database program may communicate with the back-end database manager using sockets. ( If the program were developed this way from the beginning, it makes it very easy to port it from a single-computer system to a networked application. )
+
+3. **A socket is identified by an IP address concatenated with a port number**, e.g. 200.100.50.5:80.
+
+4. Port numbers below 1024 are considered to be well-known, and are generally reserved for common Internet services. For example, telnet servers listen to port 23, ftp servers to port 21, and **web servers to port 80**.
+
+5. General purpose user sockets are assigned unused ports over 1024 by the operating system in response to system calls such as socket( ) or soctkepair( ).
+
+6. Communication channels via sockets may be one of two major forms:
+
+- **Connection-oriented ( TCP, Transmission Control Protocol )** connections emulate 效仿 a telephone connection. All packets sent down the connection are guaranteed to arrive in good condition at the other end, and to be delivered to the receiving process in the order in which they were sent. The TCP layer of the network protocol takes steps to verify all packets sent, re-send packets if necessary, and arrange the received packets in the proper order before delivering them to the receiving process. There is a certain amount of overhead involved in this procedure, and if one packet is missing or delayed, then any packets which follow will have to wait until the errant packet is delivered before they can continue their journey.
+
+- **Connectionless ( UDP, User Datagram Protocol )** emulate individual telegrams. There is no guarantee that any particular packet will get through undamaged ( or at all ), and no guarantee that the packets will get delivered in any particular order. There may even be duplicate packets delivered, depending on how the intermediary connections are configured. UDP transmissions are much faster than TCP, but **applications must implement their own error checking and recovery procedures**.
+
+7. server socket code:
+
+```java
+import java.net.*;
+import java.io.*;
+
+public class DateServer{
+    public static void main(String[] args){
+        try{
+            ServerSocket socket = new ServerSocket(6013);
+
+            while(true){
+                //Listens for a connection to be made to this socket and accepts it.
+                Socket client = socket.accept();
+
+                //return the output stream for the given socket.
+                PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
+                //write the Date() to the socket
+                pout.println(new java.util.Date().toString());
+
+                //close socket and resume listening for connections
+                client.close();
+            }
+        }
+        catch(IOException ioe){
+            System.err.println(ioe);
+        }
+    }
+}
+```
+
+8. client socket code
+
+```java
+import java.net.*;
+import java.io.*;
+
+public class DateClient{
+    public static void main(String[] args){
+        try{
+            //establish connection with server socket
+            Socket client = new Socket("127.0.0.1", "6013");
+
+            InputStream in = client.getInputStream();
+            BufferedReader bin = new BufferedReader(new InputStreamReader(in));
+
+            //Read the date from the socket
+            String line;
+            while( (line = bin.readLine()) != null){
+                System.out.println(line);
+            }
+
+            //close socket connection
+            client.close();
+        }
+        catch(IOException ioe){
+            System.err.println(ioe);
+        }
+    }
+}
+```
+
+### 3.6.2 Remote Procedure Calls(RPC)
+
+### 3.6.3 Pipes
+
+1. issues:
+   - Unidirectional or Bidirectional?
+   - half-duplex or full-duplex?
+   - must a relationship such as parent-child between processes?
+   - communicate in network or only on the same machine?
+
+#### 1. ordinary pipes(unamed pipe)
+
+1. uni-directional, with a reading end and a writing end.
+2. In UNIX ordinary pipes are created with the system call `int pipe( int fd [] )`
+
+   - return 0, success
+   - return 1, error
+   - fd[] must be allocated before the call, and the values are filled in by the pipe system call:
+     - fd[0] is filled in with a file descriptor for the reading end of the pipe
+     - fd[1] is filled in with a file descriptor for the writing end of the pipe
+
+3. UNIX pipes are accessible as files, using standard **read(**) and **write()** system calls.
+
+4. Ordinary pipes are only accessible within the process that created them.
+   - Typically a parent creates the pipe before forking off a child.
+   - **When the child inherits open files from its parent, including the pipe file(s)**, a channel of communication is established.
+   - Each process ( parent and child ) should first close the ends of the pipe that they are not using. For example, if the parent is writing to the pipe and the child is reading, then the parent should close the reading end of its pipe after the fork and the child should close the writing end.
+
+#### 2. Named pipe
+
+1. Named pipe support bidirectional communication, communiction between non parent-child process, pipes persistence after the process create them exit and multiple process can share a same named pipe, typically one reader and multiple writers.
+
+2. In UNIX, named pipes are termed **FIFO**, and appear as ordinary files in the file system.
+   - Created with **mkfifo( )** and manipulated with **read( ), write( ), open( ), close( )**, etc.
+   - UNIX named pipes are bidirectional, but half-duplex, so you still need two pipes for bidirectional communications.
+   - UNIX named pipes still require that all processes be running on the same machine. Otherwise sockets are used.
 
 ### 1.2 Process vs Thread 进程与线程之间有什么区别
 

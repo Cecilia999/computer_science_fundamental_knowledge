@@ -1,6 +1,6 @@
 # InterProcess Communication
 
-### 1. Pipe 匿名管道(unnamed pipe)
+## 1. Pipe 匿名管道(unnamed pipe)
 
 - 是 half-duplex 的, 即数据是单向的流动的(full-duplex 是双向的). 如果需要 full-duplex 需要建立两个管道  
   _实质就是 kernal 的一个缓冲区_
@@ -12,7 +12,7 @@
   - 写入无名管道的数据超过其最大值，write 操作将阻塞
   - 管道中没有数据，read 操作将阻塞
 
-### 2. FIFO 有名管道
+## 2. FIFO 有名管道
 
 - 依旧是半双工，数据是单向流动的
 - 提供了路径名，以磁盘文件的形式存在，可用于本机任意两个进程之间
@@ -24,8 +24,9 @@
 
 - [**匿名管道 vs 有名管道 c 语言实践**](http://blog.chinaunix.net/uid-26833883-id-3227144.html)
 
-### [3. 信号(Signal)](https://blog.csdn.net/weixin_38663899/article/details/86136682)
+## 3. Signal 信号
 
+- https://blog.csdn.net/weixin_38663899/article/details/86136682
 - 信号是 Linux 系统中用于进程间互相通信或者操作的一种机制，信号可以在任何时候发给某一进程，而无需知道该进程的状态。
 - 如果该进程当前并未处于执行状态，**内核会将该信号保存起来，直到该进程恢复执行并传递给它为止**。
 - 如果一个信号被进程设置为阻塞，则该信号的传递被延迟，直到其阻塞被取消才会传递给进程。
@@ -45,12 +46,12 @@
   - 硬件来源：用户按键输入 Ctrl+C 退出、硬件异常如无效的存储访问等
   - 软件终止：终止进程信号、其他进程调用 kill 函数、软件异常产生信号
 
-##### 参考：
+### 参考：
 
 https://blog.csdn.net/weixin_38663899/article/details/86136682  
 https://en.wikipedia.org/wiki/Signal_(IPC)
 
-### 4. Message queue 消息队列
+## 4. Message queue 消息队列
 
 - Message queue is a linked list of messages stored within the kernal and identify by a message queue identifier 消息队列是存放在内核中的消息链表，每个消息队列由消息队列标识符表示
 - A new queue is created or an existing queue opened by `<msgget()>`
@@ -65,12 +66,12 @@ https://en.wikipedia.org/wiki/Signal_(IPC)
     - 可以实现消息的随机查询, message 不一定要以 FIFO,也可以按消息的类型读取.比 FIFO 更有优势
 - 目前主要有两种类型的消息队列：POSIX 以及 System V, System V 目前被大量使用
 
-##### 参考：
+### 参考：
 
 [https://www.geeksforgeeks.org/ipc-using-message-queues/](https://www.geeksforgeeks.org/ipc-using-message-queues/)  
 [https://blog.csdn.net/yang_yulei/article/details/19772649](https://blog.csdn.net/yang_yulei/article/details/19772649)
 
-### 5. shared memory 共享内存
+## 5. shared memory 共享内存
 
 - two or more process can access the common memory 多个进程可以可以直接读写同一块内存空间，是最快的可用 IPC 形式
 - pipe & fifo & message queue vs shared memory:
@@ -88,12 +89,12 @@ https://en.wikipedia.org/wiki/Signal_(IPC)
     - 内核专门留出了一块内存区，可以由需要访问的进程将其映射到自己的私有地址空间。进程就可以直接读写这一块内存而不需要进行数据的拷贝，从而提高效率
     - 进程之间在共享内存时，并不总是读写少量数据后就解除映射，有新的通信时，再重新建立共享内存区域。而是保持共享区域，直到通信完毕为止
 
-##### 参考：
+### 参考：
 
 https://www.geeksforgeeks.org/ipc-shared-memory/  
 https://www.cnblogs.com/linuxbug/p/4882776.html
 
-### 6. Semaphore 信号量
+## 6. Semaphore 信号量
 
 信号量是一个计数器，用于多进程对共享数据的访问，**信号量主要用于进程间同步**。
 为了获得共享资源，进程需要执行下列操作：  
@@ -133,7 +134,7 @@ signal(S) {
 2. 互斥量值只能为 0/1，信号量值可以为非负整数。
 3. 互斥量的加锁和解锁必须由同一线程分别对应使用，信号量可以由一个线程释放，另一个线程得到。
 
-### 7. Socket
+## 7. Socket
 
 - 定义：套接字是一种通信机制，凭借这种机制，client/server（即要进行通信的进程）系统的开发工作，既可以在本地单机上进行，也可以跨网络进行。也就是说它可以让不在同一台计算机但通过网络连接计算机上的进程进行通信。
 - socket 是支持 TCP/IP 的网络通信的基本操作单元
@@ -144,7 +145,7 @@ signal(S) {
   - socket 的 port#：每一个基于 TCP/IP 网络通讯的程序(进程)都被赋予了唯一的端口和端口号，端口是一个信息缓冲区，用于保留 Socket 中的输入/输出信息，端口号是一个**16**位无符号整数，范围是**0-65535**
   - socket protocol type：tcp/udp/原始 socket
 
-#### 参考文献：
+### 参考文献：
 
 https://www.jianshu.com/p/c1015f5ffa74
 https://opensource.com/article/19/4/interprocess-communication-linux-channels
