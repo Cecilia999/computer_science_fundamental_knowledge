@@ -26,7 +26,7 @@
 
 3.  ROM (Read-Only Memory) 只读储存器，一旦储存资料就无法修改和删除，且内容不会因为电源关闭而消失。一般用于 pc 的 BIOS(Basic Input/Output System). It is restricted to reading words that are permanently stored within the unit. The manufacturer of ROM fills the programs into the ROM at the time of manufacturing the ROM.
 
-4.  flush memory 闪存 is an electronic non-volatile computer memory storage medium that can be electrically erased and reprogrammed.
+4.  flash memory 闪存 is an electronic non-volatile computer memory storage medium that can be electrically erased and reprogrammed.
 
 ### 3.1.2 Process State
 
