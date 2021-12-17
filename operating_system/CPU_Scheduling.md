@@ -48,9 +48,17 @@ that preemptive scheduling is only possible on hardware that supports a timer in
 
 ### 6.1.4 Dispatcher
 
+1. The dispatcher is the module that gives control of the CPU to the process selected by the scheduler. 把 process 给 cpu 的那个模块。This function involves:
+
+- Switching context.
+- Switching to user mode.
+- Jumping to the proper location in the newly loaded program.
+
+2. The dispatcher needs to be as fast as possible, as it is run on every context switch. The time consumed by the dispatcher is known as **dispatch latency**.
+
 ## 6.2 Scheduling Criteria 调度标准
 
-There are several different criteria to consider when trying to select the "best" scheduling algorithm for a particular situation and environment, including:
+**what is the criteria to consider when trying to select the "best" scheduling algorithm for a particular situation and environment?**
 
 1. CPU utilization (cpu 利用率)
    Ideally the CPU would be busy 100% of the time, so as to waste 0 CPU cycles. On a real system CPU usage should range from 40% ( lightly loaded ) to 90% ( heavily loaded. )

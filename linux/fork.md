@@ -31,5 +31,5 @@ p{
 ```
 
 ![linux_fork_twice.jpg](../image/linux_fork_twice.jpg)
-![linux_fork_twice.jpg](../image/linux_fork_3times.jpg)
+![linux_fork_3times.jpg](../image/linux_fork_3times.jpg)
 fork() n times will get 2^n process in total
