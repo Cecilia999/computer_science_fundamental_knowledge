@@ -2,15 +2,17 @@
 
 1. https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/
 
-## 1.
+## 1. Process Management
 
-## 2.
+### 1.1 [Process](Process.md)
 
-## 3. Process Management
+### 1.2 [Thread](Thread.ms)
 
-### 3.1 [Process](Process.md)
+### 1.3 [CPU Schedualing](CPU_Scheduling.md)
 
-### 3.2 [Thread]()
+### 1.4 [Interprocess Communication](interprocess_communication.md)
+
+### 1.5 [Deadlock](Deadlock.md)
 
 ## 4. [Memory Management]())
 
