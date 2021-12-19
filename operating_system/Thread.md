@@ -102,7 +102,7 @@ https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html
 
 ## 4.5 Threading Issues
 
-### 4.5.1 The fork( ) and exec( ) System Calls
+### 4.5.1 Thread Creation - The fork( ) and exec( ) System Calls
 
 Q: If one thread forks, is the entire process copied, or is the new process single-threaded?
 

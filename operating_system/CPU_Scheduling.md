@@ -127,7 +127,7 @@ FCFS is very simple - Just a FIFO queue, like customers waiting in line at the b
 
 #### 1. what is Round Robin Scheduling?
 
-Round robin scheduling is similar to FCFS scheduling, except that CPU bursts are assigned with limits called time quantum. In practice, most modern systems have time quanta ranging from 10 to 100 milliseconds.
+Round robin scheduling is similar to FCFS scheduling, except that CPU bursts are assigned with limits called time quantum. In practice, most modern systems have time quantum ranging from 10 to 100 milliseconds.
 
 1. Every process take turns to run a limit time quantum. When a process is given the CPU, a timer is set for whatever value has been set for a time quantum.
 
@@ -155,3 +155,12 @@ Round robin scheduling is similar to FCFS scheduling, except that CPU bursts are
 1. Mutilevel feedback queue scheduling is the same as mutilevel queue schedule except job may move from one queue to another
 
 ## 6.4 Thread Scheduling
+
+1. The process scheduler schedules only the **kernel threads**.
+2. User threads are mapped to kernel threads by the thread library - The OS ( and in particular the scheduler ) is unaware of them.
+
+### 6.4.1 Contention Scope
+
+### 6.4.2 Pthread Scheduling
+
+## 6.5 Multiple-Processor Scheduling

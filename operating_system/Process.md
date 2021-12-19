@@ -87,14 +87,22 @@ A process migrates amoung vairous scheduling queue throughout its lifetime and t
 
 2. **short-term scheduler/CPU scheduler**:
 
-   - selects from among the processes that are ready to execute and allocates the CPU to one of them
+   - selects process from ready queue and allocates the CPU to one of them
    - runs very frequently, on the order of 100 milliseconds, and must very quickly swap one process out of the CPU and swap in another one.
 
 3. **Medium-term Scheduling**
 
-   - When system loads get high, this scheduler will swap one or more processes out of the ready queue system for a few seconds, in order to allow smaller faster jobs to finish up quickly and clear the system.
+   - When system loads get high, this scheduler will swap processes out of the ready queue for a few seconds, in order to allow smaller faster jobs to finish up quickly and clear the system.
 
 ### 3.2.3 Context Switch
+
+1. Whenever an interrupt arrives, the CPU must do a state-save of the currently running process, then switch into kernel mode to handle the interrupt, and then do a state-restore for the interrupted process.
+
+2. Similarly, a context switch occurs when the time slice for one process has expired and a new process is to be loaded from the ready queue. There is a timer interrupt, which will then cause the current process's state to be saved and the new process's state to be restored.
+
+3. Saving and restoring states involves saving and restoring all of the registers and program counter(s), as well as the process control blocks.
+
+4. Context switching happens VERY VERY frequently, and the overhead of doing the switching is just lost CPU time, so context switches ( state saves & restores ) need to be as fast as possible. Some hardware has special provisions for speeding this up, such as a single machine instruction for saving or restoring all registers at once.
 
 #### 1. what is context switch?
 
@@ -140,7 +148,7 @@ save and restore content:
 
 - The child may be an exact duplicate of the parent, sharing the same program and data segments in memory. Each will have their own PCB, including program counter, registers, and PID. This is the behavior of the **fork()** system call in **UNIX**.
 
-- The child process may have a new program loaded into its address space, with all new code and data segments. This is the behavior of the **spawn()** system calls in **Windows**. **UNIX** systems implement this as a second step, using the **exec()** system call.
+- The child process may have a new program loaded into its own address space, with all new code and data segments. This is the behavior of the **spawn()** system calls in **Windows**. **UNIX** systems implement this as a second step, using the **exec()** system call.
 
 8. Process IDs can be looked up any time for the current process or its direct parent using the **getpid()** and **getppid()** system calls respectively.
 
@@ -159,7 +167,7 @@ save and restore content:
 
 ## 3.4 IPC - Interprocess Communication
 
-看：https://www.guru99.com/inter-process-communication-ipc.html
+看：https://blog.oureducation.in/important-questions-on-inter-process-communication/
 
 1. Independent Process: operating concurrently on a systems and can neither affect other processes or be affected by other processes.
 
@@ -178,8 +186,6 @@ save and restore content:
 
 5. Message Passing requires system calls for every message transfer, and is therefore slower, but it is simpler to set up and works well across multiple computers. Message passing is generally preferable when the amount and/or frequency of data transfers is small, or when multiple computers are involved.
 
-6. check [interprocess_communication](interprocess_communication.md)
-
 ### 3.4.1 Shared-Memory Systems
 
 看 Producer-Consumer Example Using Shared Memory：https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/3_Processes.html
@@ -191,7 +197,7 @@ save and restore content:
 3. There are three key issues to be resolved in message passing systems as further explored in the next three subsections:
    - Direct or indirect communication ( naming )
    - Synchronous or asynchronous communication
-   - Automatic or explicit buffering.
+   - buffering.
 
 #### 3.4.2.1 Naming
 
@@ -201,7 +207,7 @@ save and restore content:
    - **symmetric communication**: the receiver must also know the specific name of the sender from which it wishes to receive messages.
    - **asymmetric communications**: this is not necessary.
 
-2. **Indirect communication**: uses shared mailboxes, or ports.
+2. **Indirect communication**: uses **shared mailboxes**, or **ports**.
 
    - Multiple processes can share the same mailbox or boxes.
    - Only one process can read any given message in a mailbox. Initially the process that creates the mailbox is the owner, and is the only one allowed to read mail in the mailbox, although this privilege may be transferred.
@@ -223,7 +229,25 @@ Messages are passed via queues, which may have one of three capacity configurati
 2. **Bounded capacity**- There is a certain pre-determined finite capacity in the queue. Senders must block if the queue is full, until space becomes available in the queue, but may be either blocking or non-blocking otherwise.
 3. **Unbounded capacity** - The queue has a theoretical infinite capacity, so senders are never forced to block.
 
+### 3.4.3 shared memory vs message passing
+
+- **shared memory**
+
+  - shared memory only copy data twice 共享内存则只拷贝两次数据：一次从输入文件到共享内存区，另一次从共享内存区到输出文件
+  - Process which wish to use the shared memory need to attach the shared memory area to its own address space, and no need to copy the data from shared memory when read/write 内核专门留出了一块内存区，可以由需要访问的进程将其映射到自己的私有地址空间。进程就可以直接读写这一块内存而不需要进行数据的拷贝，从而提高效率
+  - 进程之间在共享内存时，并不总是读写少量数据后就解除映射，有新的通信时，再重新建立共享内存区域。而是保持共享区域，直到通信完毕为止
+
+- **Message Passing: pipe/fifo/message queue**
+
+  - Server reads from the input file.
+  - The server writes this data in a message using pipe/fifo/message queue.
+  - The client reads the data from the IPC channel, again requiring the data to be copied from kernel’s IPC buffer to the client’s buffer.
+  - Finally the data is copied from the client’s buffer.
+  - 一共需要 copy4 次，2read + 2write
+
 ## 3.5 Examples of IPC Systems
+
+[interprocess communication](./interprocess_communication.md)
 
 ## 3.6 Communication in Client-Server Systems
 
