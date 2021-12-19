@@ -6,7 +6,7 @@ https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/4_Threads.html
 
 1. A thread is a basic unit of CPU utilization;
 
-2. it comprises a thread ID, a program counter, a register set, and a stack.
+2. it comprises a thread ID, a program counter, a register set, and a stack (TLS-thread local storage).
 
 3. It shares with other threads belonging to the same process its code section, data section, and other operating-system resources, such as open files and signals.
 
@@ -163,8 +163,10 @@ A: Many versions of UNIX provide multiple versions of the fork() call for this p
 
 2. Threads that are no longer needed may be cancelled by another thread in one of two ways:
 
-   - Asynchronous Cancellation cancels the thread immediately.
-   - Deferred Cancellation sets a flag indicating the thread should cancel itself when it is convenient. It is then up to the cancelled thread to check this flag periodically and exit nicely when it sees the flag set.
+   - Asynchronous Cancellation
+     cancels the thread immediately.
+   - Deferred 延期的 Cancellation
+     sets a flag indicating the thread should cancel itself when it is convenient. It is then up to the cancelled thread to check this flag periodically and exit nicely when it sees the flag set.
 
 3. ( Shared ) resource allocation and inter-thread data transfers can be problematic with asynchronous cancellation.
 

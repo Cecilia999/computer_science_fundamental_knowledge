@@ -14,7 +14,7 @@
 
 ### 1.5 [Deadlock](Deadlock.md)
 
-## 4. [Memory Management]())
+## 4. [Memory Management]()
 
 ## 5. [Stroage Management]()
 
