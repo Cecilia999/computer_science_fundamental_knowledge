@@ -27,8 +27,7 @@ Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a to
 
 ![ipv4_classes1](../image/ipv4_classes1.jpg)
 ![ipv4_classes2](../image/ipv4_classes2.jpg)
-
-4. IPv4 Datagram Format
+![ipv4_classes3](../image/ipv4_classes3.jpg) 4. IPv4 Datagram Format
 
 ![ipv4_datagram_format](../image/ipv4_datagram_format.jpg)
 
