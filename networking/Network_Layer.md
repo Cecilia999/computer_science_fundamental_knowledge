@@ -22,11 +22,24 @@ Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a to
 1. what is subnet
    A subnet is a logical subdivision of an IP network. e.g. consist of a few host inerface and a router interface interconnected in a Ethernet LAN forms a subnet.
 
-2. subnet mask
+2. what is subnet mask
 
-   the subnet mask splits the IP address into the host and network addresses, thereby defining which part of the IP address belongs to the device and which part belongs to the network.
+   A Subnet mask is a 32-bit number that masks an IP address, and divides the IP address into network address and host address. Subnet Mask is made by setting network bits to all "1"s and setting host bits to all "0"s. Within a given network, two host addresses are reserved for special purpose, and cannot be assigned to hosts. The "0" address is assigned a network address and "255" is assigned to a broadcast address, and they cannot be assigned to hosts.
 
-   - 223.1.1.0/24: first 24 bits are network portion and the remaining 8 bits are hosts.
+| Address Class | No of Network Bits | No of Host Bits | Subnet mask     | CIDR notation |
+| ------------- | ------------------ | --------------- | --------------- | ------------- |
+| A             | 8                  | 24              | 255.0.0.0       | /8            |
+| A             | 9                  | 23              | 255.128.0.0     | /9            |
+| A             | 12                 | 20              | 255.240.0.0     | /12           |
+| A             | 14                 | 18              | 255.252.0.0     | /14           |
+| B             | 16                 | 16              | 255.255.0.0     | /16           |
+| B             | 17                 | 15              | 255.255.128.0   | /17           |
+| B             | 20                 | 12              | 255.255.240.0   | /20           |
+| B             | 22                 | 10              | 255.255.252.0   | /22           |
+| C             | 24                 | 8               | 255.255.255.0   | /24           |
+| C             | 25                 | 7               | 255.255.255.128 | /25           |
+| C             | 28                 | 4               | 255.255.255.240 | /28           |
+| C             | 30                 | 2               | 255.255.255.252 | /30           |
 
 #### 1. classful addressing
 
@@ -58,7 +71,10 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 
 ![ipv4_datagram_format](../image/ipv4_datagram_format.jpg)
 
-### IPv4 Datagram Fragmentation
+1. **TTL (time-to-live)**
+   is included to ensure that datagrams do not circulate forever (due to, for example, a long-lived routing loop) in the network. This field is decremented by one each time the datagram is processed by a router. If the TTL field reaches 0, a router must drop that datagram.
+
+### 1.3 IPv4 Datagram Fragmentation
 
 ### what is NAT
 
