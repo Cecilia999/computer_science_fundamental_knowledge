@@ -13,7 +13,29 @@ The transport layer provides various forms of process-to-process communication b
 
 An IP address is a unique address that identifies a device on the internet or a local network. IP stands for "Internet Protocol," which is the set of rules governing the format of data sent via the internet or local network.
 
-2. what is IPv4 address
+2. what is private IP address
+
+   Private IP address are ip address that are not valid for use on the internet. If you want to access internet on these private IPs, you must have to use proxy server or NAT server.
+
+   - classA: 10.0.0.0 - 10.255.255.255
+   - classB: 172.16.0.0 - 172.31.255.255
+   - classC: 192.168.0.0 - 192.168.255.255
+
+3. what is public IP address
+
+   A public IP address is an address taken by the Internet Service Provider which facilitates(促进) you to communication on the internet.
+
+4. special IP address
+
+   Special Address is range from 127.0.0.1 to 127.255.255.255 are network testing addresses also known as **loopback addresses**. It is reserved for loopback or localhost connections.
+
+   > These networks are usually reserved for the biggest customers or some of the original members of the Internet. To identify any connection issue, the initial step is to ping the server and check if it is responding.
+
+   > If there is no response from the server then there are various causes like the network is down or the cable needs to be replaced or the network card is not in good condition. 127.0.0.1 is a loopback connection on the Network Interface Card (NIC) and if you are able to ping this server successfully, then it means that the hardware is in a good shape and condition.
+
+   > 127.0.0.1 and localhost are the same things in most of the computer network functioning.
+
+5. what is IPv4 address
 
 Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a total of 2^32 (or approximately 4 billion) possible IP addresses. These addresses are typically written in dotted-decimal notation, in which each byte of the address is written in its decimal form and is separated by a period (dot) from other bytes in the address. e.g: 127.255.255.255
 
@@ -81,13 +103,5 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 Network Address Translation (NAT)
 
 ### IPv6
-
-## 4.4 Generalized Forwarding and SDN
-
-### 4.4.1 Match
-
-### 4.4.2 Action
-
-### 4.4.3 OpenFlow Examples of Match-plus-action in Action
 
 # Control Plane
