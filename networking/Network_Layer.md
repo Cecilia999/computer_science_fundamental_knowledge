@@ -51,7 +51,7 @@ IPv4 classes are differentiated based on the number of hosts it supports on the 
 - class b support medium size network
 - class c support small size network
 
-![ipv4_classes1](../image/ipv4_classes.jpg)
+![ipv4_classes1](../image/ipv4_classes.JPG)
 ![ipv4_classes2](../image/ipv4_classes1.jpg)
 
 #### 2. CIDR (pronounced cider) - Classless Interdomain Routing
