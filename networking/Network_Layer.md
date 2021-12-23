@@ -19,6 +19,15 @@ Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a to
 
 ### 1.1 IPv4 Addressing
 
+1. what is subnet
+   A subnet is a logical subdivision of an IP network. e.g. consist of a few host inerface and a router interface interconnected in a Ethernet LAN forms a subnet.
+
+2. subnet mask
+
+   the subnet mask splits the IP address into the host and network addresses, thereby defining which part of the IP address belongs to the device and which part belongs to the network.
+
+   - 223.1.1.0/24: first 24 bits are network portion and the remaining 8 bits are hosts.
+
 #### 1. classful addressing
 
 1. What are the different classes of IPv4?
@@ -29,17 +38,21 @@ IPv4 classes are differentiated based on the number of hosts it supports on the 
 - class b support medium size network
 - class c support small size network
 
+![ipv4_classes1](../image/ipv4_classes.jpg)
 ![ipv4_classes2](../image/ipv4_classes1.jpg)
-![ipv4_classes1](../image/ipv4_classes1.jpg)
 
 #### 2. CIDR (pronounced cider) - Classless Interdomain Routing
 
 The Internet’s address assignment strategy is known as **CIDR** (pronounced cider). CIDR generalizes the notion of subnet addressing.
 
-With subnetaddressing, the 32-bit IP address is divided into two parts and again has the dotted-decimal form a.b.c.d/x, where x indicates the number of bits in the first part of the address.
+With subnet addressing, the 32-bit IP address is divided into two parts and has the dotted-decimal form **a.b.c.d/x**, where x indicates the number of bits for the network portion of the address.
 
-- x referred to as the **prefix (or network prefix)** of the address
-- The remain part refere to host
+1. **x** referred to as the **prefix (or network prefix)** of the address, The IP addresses of devices within the organization will share the common prefix.
+   在 datagram 被 forward within the organization 之前，only the leading x bits of the address need to be considered.
+
+2. The remain **32 - x** part refer to different hosts/devices
+
+3. 比 classful addressing 更多 possible of x（x 不用只能等于 8，16，24）
 
 ### 1.2 IPv4 Datagram Format
 
