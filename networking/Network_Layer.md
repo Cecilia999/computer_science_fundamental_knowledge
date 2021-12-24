@@ -89,6 +89,26 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 
 3. 比 classful addressing 更多 possible of x（x 不用只能等于 8，16，24）
 
+#### 3. obtain a block of address
+
+contact ISP to see if it is already allocated
+
+#### 4. obtain a host address - DHCP (Dynamic Host Configuration Protocol)
+
+1. What is DHCP? How does it works?
+
+   It stands for Dynamic Host Configuration Protocol, and allocates IP addresses, subnet masks and gateways to hosts. For a newly arriving host, the DHCP protocol is a four-step process:
+
+   - A host upon entering a network, broadcasts a message in search of a DHCP server (DHCP DISCOVER)
+   - An offer message is sent back by the DHCP server as a packet containing lease time, subnet mask, IP addresses, etc (DHCP OFFER)
+   - Depending on which offer accepted, the client sends back a reply broadcast letting all DHCP servers know (DHCP REQUEST)
+   - Server sends an acknowledgment (DHCP ACK)
+   - Once the client receives the DHCP ACK, the interaction is complete and the client can use the DHCP-allocated IP address for the lease duration.
+
+2. Can you have two DHCP servers in the same network? How it works?
+
+   Yes, but each of them should have different scope of IP address.
+
 ### 1.2 IPv4 Datagram Format
 
 ![ipv4_datagram_format](../image/ipv4_datagram_format.jpg)
@@ -98,10 +118,56 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 
 ### 1.3 IPv4 Datagram Fragmentation
 
-### what is NAT
+1. Not all link-layer protocols can carry network-layer datagram of the same size. The maximum amount of data that a link-layer frame can carry is called the **maximum transmission unit (MTU)**
 
-Network Address Translation (NAT)
+2. IP datagram is encapsulated within the link-layer frame for transport from one router to the next router. MTU of link-layer protocol place a hard limit on the length of datagram.
 
-### IPv6
+3. A router may interconnect(互相连接) several links each have different link-layer protocol. In this case, we need to used fragmentation to fragment the payload in the IP datagram into two or more smaller IP datagrams. 然后 reassemble before fragments reach to the destination transport layer.
+
+4. each fragment stamp with src ip address + dest ip address + identification
+
+### 1.4 NAT - Network Address Translation
+
+1. origin: IP address only have 32 bits which is not enough for all the host in the Internet to use. NAT enable router resolve this problem.
+
+2. what is NAT?
+
+Nat stand for Network Address Translation (NAT), is a process that enables one, unique public IP address to represent an entire group of Private IP address.
+
+NAT-enable router translate public IP address, port number and seesionID into private IP address and port number, vice versa.
+
+We know that to access the Internet, one public IP address is needed, but public IP address is limit and NAT allows to use a private IP address in our private network to access the Internet through a single public address. NAT’s main purpose is to conserve the number of public IP addresses in use.
+
+3. how does NAT works?
+
+The NAT router has one interface in the local (inside) network and one interface in the global (outside) network. When a packet traverse outside the local (inside) network, then NAT converts that local (private) IP address to a global (public) IP address. When a packet enters the local network, the global (public) IP address is converted to a local (private) IP address.
+
+4. why mask port number?
+
+To differenciate two different host in the private network to request the same destination int global network on the same port.
+
+### 1.5 IPv6
+
+#### 1. ipv6 datagram format
+
+![ipv6 datagram format](../image/ipv6_datagram_format.jpg)
+
+1. version number
+2. traffic class: The 8-bit traffic class field, like the TOS field in IPv4, can be used to give priority to certain datagrams
+3. flow label: this 20-bit field is used to identify a flow of datagrams
+4. payload length: This 16-bit value is treated as an unsigned integer giving the number of bytes in the IPv6 datagram following the fixed-length, **40-byte datagram header**
+5. Next header: This field identifies the protocol, same values as the upper-layer protocol field in the ipv4.
+6. Hop limit: same as TTL in ipv4
+
+#### 2. ipv6 vs ipv4
+
+1. ipv6 does not allow fragmentation & reassembly
+2. ipv6 address is 128bits length
+3. ipv6 does not support header checksum
+4. ipv6 using unicast/multicast/anycast addressing
+
+#### 3. Transitioning from IPv4 to IPv6
+
+encapsulate ipv6 datagram into ipv4 datagram
 
 # Control Plane
