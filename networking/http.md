@@ -2,37 +2,55 @@
 
 ## 1. 什么是 http
 
+1. The HyperText Transfer Protocol (HTTP), the Web’s application-layer protocol, running on the top of TCP
+
+2. HTTP is implemented in two programs: a client program and a server program. The client program and server program, executing on different end systems, talk to each other by exchanging HTTP messages. HTTP defines the structure of these messages and how the client and server exchange the messages.
+
+3. HTTP is stateless.
+
 - HTTP 协议是超文本传输协议。它是基于 TCP 协议的应用层传输协议，即客户端和服务端进行数据传输的一种规则
 - 用于定义 WEB 浏览器与 WEB 服务器之间交换数据的过程:  
    客户端连上 WEB 服务器后，若想获得 WEB 服务器中的某个 WEB 资源，需遵守一定的通讯格式，HTTP 协议用于定义客户端与 WEB 服务器通迅的格式。
 - HTTP 是一个无状态的协议
 
-## 2. HTTP request message 请求报文
+### 1.1 brief intro to Web
 
-HTTP 请求分为三个部分：请求行、请求头、请求体。类似于下面这样：
+1. A Web page (also called a document) consists of objects. An object is simply a file—such as an HTML file, a JPEG image, a Java applet, or a video clip—that is **addressable by a single URL**.
+
+   - Most Web pages consist of a base HTML file and several referenced objects.
+
+2. Each URL has two components: the hostname of the server that houses the object and the object’s path name.
+
+   - Because Web browsers implement the client side of HTTP, in the context of the Web, we will use the words browser and client interchangeably. Web servers, which implement the server side of HTTP, house Web objects, each addressable by a URL.
+
+## 2. HTTP request message format 请求报文
+
+HTTP 请求分为三个部分：**request line + header line + entity body**
 ![alt text](../image/http请求.jpg)
 
-- request line 请求行 : method + url + http version
-  - method fields includes: _GET, POST, HEAD, PUT, and DELETE_
-- header lines 多个消息头
-- blank line 一个空行
-- entity body
+1. request line 请求行 : method + url + http version
 
-### 2.1 请求方法
+- method fields includes: _GET, POST, HEAD, PUT, and DELETE_
+
+2. header lines: specifies the host on which the object resides
+3. blank line 一个空行
+4. entity body
+
+### 2.1 Request method
 
 HTTP 服务器至少应该实现 GET 和 HEAD 方法，其他方法都是可选的
 
-|     | 方法       | 作用                                                                                                                                        |
-| --- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **GET**    | **请求指定页面信息，并返回实体主体**                                                                                                        |
-| 2   | HEAD       | 类似于 GET 请求，只不过返回的响应中没有具体的内容，用于获取报头                                                                             |
-| 3   | **POST**   | **向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST 请求可能会导致新的资源的建立和或已有资源的修改。** |
-| 4   | **PUT**    | **从客户端向服务器传送的数据取代指定的文档的内容。**也是**导致新的资源的建立和或已有资源的修改。**                                          |
-| 5   | PATCH      | 从客户端向服务器传送的数据取代指定的文档的内容。（部分取代）                                                                                |
-| 6   | **DELETE** | **请求服务器删除指定的页面。**                                                                                                              |
-| 7   | CONNECT    | HTTP11 协议中预留给能够将连接改为管道方式的代理服务器                                                                                       |
-| 8   | OPTIONS    | 允许客户端查看服务器的性能。                                                                                                                |
-| 9   | TRACE      | 回显服务器收到的请求，主要用于测试或诊断。                                                                                                  |
+|     | 方法       | 作用                                                                                                                                                                                                                                                                                                |
+| --- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **GET**    | **请求指定页面信息，并返回实体主体**                                                                                                                                                                                                                                                                |
+| 2   | **HEAD**   | The HEAD method is similar to the GET method. When a server receives a request with the HEAD method, it responds with an HTTP message without the requested object. Application developers often use the HEAD method for debugging. 类似于 GET 请求，只不过返回的响应中没有具体的内容，用于获取报头 |
+| 3   | **POST**   | **向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST 请求可能会导致新的资源的建立和或已有资源的修改。**                                                                                                                                                         |
+| 4   | **PUT**    | **从客户端向服务器传送的数据取代指定的文档的内容。**也是**导致新的资源的建立和或已有资源的修改。**                                                                                                                                                                                                  |
+| 5   | PATCH      | 从客户端向服务器传送的数据取代指定的文档的内容。（部分取代）                                                                                                                                                                                                                                        |
+| 6   | **DELETE** | **请求服务器删除指定的页面。**                                                                                                                                                                                                                                                                      |
+| 7   | CONNECT    | HTTP11 协议中预留给能够将连接改为管道方式的代理服务器                                                                                                                                                                                                                                               |
+| 8   | OPTIONS    | 允许客户端查看服务器的性能。                                                                                                                                                                                                                                                                        |
+| 9   | TRACE      | 回显服务器收到的请求，主要用于测试或诊断。                                                                                                                                                                                                                                                          |
 
 ### 2.2 URL - Uniform Resource Locator
 
