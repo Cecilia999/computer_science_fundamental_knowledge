@@ -189,6 +189,22 @@ header lines includes:
 
 ![Alt text](../image/http_response.jpg)
 
+## 4. Web Cache
+
+A Web cache—also called a proxy server—is a network entity that satisfies HTTP requests on the behalf of an origin Web server. The Web cache has its own disk storage and keeps copies of recently
+requested objects in this storage.
+
+![alt text](../image/web_cache.jpg)
+
+1. The browser establishes a TCP connection to the Web cache and sends an HTTP request for the object to the Web cache.
+
+2. The Web cache checks to see if it has a copy of the object stored locally. If it does, the Web cache returns the object within an HTTP response message to the client browser.
+
+3. If the Web cache does not have the object, the Web cache opens a TCP connection to the origin server, that is, to www.someschool.edu. The Web cache then sends an HTTP request for the object into the cache-to-server TCP connection. After receiving this request, the origin server sends the object within an HTTP response to the Web cache.
+
+4. When the Web cache receives the object, it stores a copy in its local storage and sends a copy, within an HTTP response message, to the client browser (over the existing TCP connection
+   between the client browser and the Web cache).
+
 ## 4. HTTP 中的 idempotence - 幂等性
 
 **Idempotence** - is any function that can be executed several times without changing the final result beyond its first iteration.
