@@ -40,22 +40,23 @@ HTTP 请求分为三个部分：**request line + header line + entity body**
 
 HTTP 服务器至少应该实现 GET 和 HEAD 方法，其他方法都是可选的
 
-|     | 方法       | 作用                                                                                                                                                                                                                                                                                                                              |
-| --- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **GET**    | **GET method is used when the browser requests an object, with the requested object identified in the URL field. 请求指定页面信息，并返回实体主体**                                                                                                                                                                               |
-| 2   | **HEAD**   | The HEAD method is similar to the GET method. When a server receives a request with the HEAD method, it responds with an HTTP message without the requested object. Application developers often use the HEAD method for debugging. 类似于 GET 请求，只不过返回的响应中没有具体的内容，用于获取报头                               |
-| 3   | **POST**   | **create a new object on a web server** POST means "create new" as in "Here is the input for creating a user, create it for me". PUT means "insert, replace if already exists" as in "Here is the data for user 5". You POST to example.com/users since you don't know the URL of the user yet, you want the server to create it. |
-| 4   | **PUT**    | **It allows a user to upload an object to a specific path (directory) on a specific Web server.从客户端向服务器传送的数据取代指定的文档的内容。**也是**导致新的资源的建立和或已有资源的修改。**                                                                                                                                   |
-| 5   | PATCH      | 从客户端向服务器传送的数据取代指定的文档的内容。（部分取代）                                                                                                                                                                                                                                                                      |
-| 6   | **DELETE** | **delete an object on a web server 请求服务器删除指定的页面。**                                                                                                                                                                                                                                                                   |
-| 7   | CONNECT    | HTTP11 协议中预留给能够将连接改为管道方式的代理服务器                                                                                                                                                                                                                                                                             |
-| 8   | OPTIONS    | 允许客户端查看服务器的性能。                                                                                                                                                                                                                                                                                                      |
-| 9   | TRACE      | 回显服务器收到的请求，主要用于测试或诊断。                                                                                                                                                                                                                                                                                        |
+|     | 方法       | 作用                                                                                                                                                                                                                                                                                                                               |
+| --- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **GET**    | **GET method is used when the browser requests an object, with the requested object identified in the URL field. 请求指定页面信息，并返回实体主体**                                                                                                                                                                                |
+| 2   | **HEAD**   | The HEAD method is similar to the GET method. When a server receives a request with the HEAD method, it responds with an HTTP message without the requested object. Application developers often use the HEAD method for debugging. 类似于 GET 请求，只不过返回的响应中没有具体的内容，用于获取报头                                |
+| 3   | **POST**   | **create a new object on a web server.** POST means "create new" as in "Here is the input for creating a user, create it for me". PUT means "insert, replace if already exists" as in "Here is the data for user 5". You POST to example.com/users since you don't know the URL of the user yet, you want the server to create it. |
+| 4   | **PUT**    | **upload an object to a specific path (directory) on a specific Web server.**从客户端向服务器传送的数据取代指定的文档的内容。                                                                                                                                                                                                      |
+| 5   | PATCH      | 从客户端向服务器传送的数据取代指定的文档的内容。（部分取代）                                                                                                                                                                                                                                                                       |
+| 6   | **DELETE** | **delete an object on a web server 请求服务器删除指定的页面。**                                                                                                                                                                                                                                                                    |
+| 7   | CONNECT    | HTTP1.1 协议中预留给能够将连接改为管道方式的代理服务器                                                                                                                                                                                                                                                                             |
+| 8   | OPTIONS    | 允许客户端查看服务器的性能。                                                                                                                                                                                                                                                                                                       |
+| 9   | TRACE      | 回显服务器收到的请求，主要用于测试或诊断。                                                                                                                                                                                                                                                                                         |
 
 ### 2.2 URL - Uniform Resource Locator
 
-URL：统一资源定位符，是一种资源位置的抽象唯一识别方法。
+URL is a unique identifier used to locate a resource on the Internet. It is also referred to as a web address.
 
+consist of: <protocol>://<host>:<port>/<path>
 组成：<协议>://<主机>:<端口>/<路径>
 
 端口和路径有时可以省略（HTTP 默认端口号是 80，HTTPS 默认端口号是 443）
@@ -117,10 +118,10 @@ URL：统一资源定位符，是一种资源位置的抽象唯一识别方法�
 
 ## 3. HTTP response message 响应报文
 
-HTTP 响应分为三个部分：状态行、响应头、响应正文。类似于下面这样：
+HTTP 响应分为三个部分：status line, response header, reponse entity。类似于下面这样：
 ![alt text](../image/http响应.jpg)
 
-### 3.1 an initial status line 状态行
+### 3.1 an initial status line 状态行 = protocol version field + status code + status message
 
 | **类别** | **原因短语**                                           |
 | -------- | ------------------------------------------------------ |
@@ -130,7 +131,7 @@ HTTP 响应分为三个部分：状态行、响应头、响应正文。类似于
 | 4XX      | Client Error（客户端错误状态码） 服务器无法处理请求    |
 | 5XX      | Server Error（服务器错误状态码） 服务器处理请求出错    |
 
-#### 常见状态码
+#### 常见 status code
 
 **1XX**
 
