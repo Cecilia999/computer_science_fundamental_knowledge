@@ -59,7 +59,3 @@
 # [DNS](DNS.md)
 
 # Video Streaming and Content Distribution Networks
-
-```
-
-```
