@@ -191,8 +191,8 @@ header lines includes:
 
 ## 4. Web Cache
 
-A Web cache—also called a proxy server—is a network entity that satisfies HTTP requests on the behalf of an origin Web server. The Web cache has its own disk storage and keeps copies of recently
-requested objects in this storage.
+A Web cache also called a proxy server:  
+is a network entity that satisfies HTTP requests on the behalf of an origin Web server. The Web cache has its own disk storage and keeps copies of recently requested objects in this storage.
 
 ![alt text](../image/web_cache.jpg)
 
