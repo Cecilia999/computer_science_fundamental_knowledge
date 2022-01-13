@@ -2,7 +2,7 @@
 
 ## 1. 什么是 https
 
-**HTTPS = HTTP + 加密 + 认证 + 完整性保护**
+**HTTPS = HTTP + encryption + authentication + integrity**
 
 通过在在 HTTP 下加入 SSL(Secure Socket Laryer)/TLS(Transfer Layer Security) 层实现，SSL/TLS 是独立于 HTTP 的协议。
 
