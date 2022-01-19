@@ -13,13 +13,15 @@ The transport layer provides various forms of process-to-process communication b
 
 An IP address is a unique address that identifies a device on the internet or a local network. IP stands for "Internet Protocol," which is the set of rules governing the format of data sent via the internet or local network.
 
+![alt text](../image/private_vs_public_ip_address.jpg)
+
 2. what is private IP address
 
-   Private IP address are ip address that are not valid for use on the internet. If you want to access internet on these private IPs, you must have to use proxy server or NAT server.
+Private IP address are ip address that are not valid for use on the internet. If you want to access internet on these private IPs, you must have to use proxy server or NAT server.
 
-   - classA: 10.0.0.0 - 10.255.255.255
-   - classB: 172.16.0.0 - 172.31.255.255
-   - classC: 192.168.0.0 - 192.168.255.255
+- classA: 10.0.0.0 - 10.255.255.255
+- classB: 172.16.0.0 - 172.31.255.255
+- classC: 192.168.0.0 - 192.168.255.255
 
 3. what is public IP address
 
@@ -69,9 +71,9 @@ Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a to
 
 IPv4 classes are differentiated based on the number of hosts it supports on the network. The types of IPv4 classes and are based on the network/subnet portions of an IP address, which were constrained to be 8, 16, or 24 bits in length.
 
-- class A support large size network
-- class b support medium size network
-- class c support small size network
+- class A support **16,581,375** large size network
+- class b support **65,536** medium size network
+- class c support **256** small size network
 
 ![ipv4_classes1](../image/ipv4_classes.JPG)
 ![ipv4_classes2](../image/ipv4_classes1.jpg)
@@ -88,6 +90,8 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 2. The remain **32 - x** part refer to different hosts/devices
 
 3. 比 classful addressing 更多 possible of x（x 不用只能等于 8，16，24）
+
+参考：https://www.google.com/search?q=what+is+cidr+in+networking&sxsrf=AOaemvIvUZ9H6wxzOqPdJ8i0KclP6O594A%3A1642569228764&ei=DJ7nYcmaLpapoASFzp3wAQ&oq=what+is+cidr&gs_lcp=Cgdnd3Mtd2l6EAMYATIFCAAQkQIyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQyBQgAEIAEMgUIABCABDIFCAAQgAQ6BAgjECc6BAgAEENKBAhBGABKBAhGGABQAFipEGClIGgBcAJ4AYAB0AKIAe0QkgEIMC4xMC4yLjGYAQCgAQHAAQE&sclient=gws-wiz
 
 #### 3. obtain a block of address
 

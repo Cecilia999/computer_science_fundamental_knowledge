@@ -28,7 +28,13 @@ Docker 容器包括应用程序及其所有依赖项，作为操作系统的独�
 - In other words, Docker images are used to create containers. When a user runs a Docker image, an instance of a container is created. These docker images can be deployed to any Docker environment.
 - To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.
 
-Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。使用 build 命令创建镜像, 并且在使用 run 启动时它们将生成容器。镜像存储在 Docker registry (docker 注册表)中, Docker Hub 因为它们可能变得非常大, 镜像被设计为由其他镜像层组成, 允许在通过网络传输镜像时发送最少量的数据。
+Docker 镜像是 Docker 容器的源代码，Docker 镜像用于创建容器。
+
+- 写 dockerfile
+- `docker build .` 生成 docker image
+- `docker image` check docker image list
+- `docker run -it -p port_number -d image_id` create container based on this image (**Where -it is to make sure the container is interactive, -p is for port forwarding, and -d to run the daemon in the background.**)
+- 镜像存储在 Docker registry (docker 注册表)中, Docker Hub 因为它们可能变得非常大, 镜像被设计为由其他镜像层组成, 允许在通过网络传输镜像时发送最少量的数据。
 
 ## 4. What is docker image registry? What is Docker Hub?
 
@@ -68,16 +74,16 @@ No, it is not possible! **A container MUST be in the stopped state before we can
 
 1. A Dockerfile is a text document which contains all the commands that a user can call on the command line to assemble an image.
 2. So, Docker can build images automatically by reading the instructions from a Dockerfile.
-3. You can use `docker build` to create an automated build to execute several command-line instructions in succession.
+3. You can use `docker build` to create docker image and use `docker run` to create docker container based on this image
 
-## 9. what do you know about dockerfile / dockerfile 最常见的 command 是什么
+## 10. DOCKERFILE
 
 参考：
 
 - dockerfile 文档：https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 - dockerfile command 详解： https://www.cnblogs.com/panwenbin-logs/p/8007348.html
 
-1.  A Dockerfile must begin with a **FROM** instruction. 指定基础镜像，必须为第一个命令
+1.  **FROM**: A Dockerfile must begin with a **FROM** instruction. 指定基础镜像，必须为第一个命令
 
         The FROM instruction specifies the Parent Image from which you are building.
         ```shell
@@ -91,7 +97,9 @@ No, it is not possible! **A container MUST be in the stopped state before we can
         　　 tag 或 digest 是可选的，如果不使用这两个值时，会使用 latest 版本的基础镜像
         ```
 
-2.  **LABEL**：用于为镜像添加元数据
+2.  **MAINTAINER**: 镜像是谁写的,姓名+邮箱
+
+3.  **LABEL**：用于为镜像添加元数据
 
     参考：https://blog.csdn.net/solinger/article/details/96175607
 
@@ -163,7 +171,7 @@ No, it is not possible! **A container MUST be in the stopped state before we can
         },
         ```
 
-3.  **RUN** : 构建镜像时执行的命令
+4.  **RUN** : 构建镜像时执行的命令
 
     ```shell
     RUN apt-get update && apt-get install -y \
@@ -189,7 +197,7 @@ No, it is not possible! **A container MUST be in the stopped state before we can
     - RUN 指令创建的中间镜像会被缓存，并会在下次构建中使用。如果不想使用这些缓存镜像，可以在构建时指定--no-cache 参数，如：docker build --no-cache
     - **cache dusting: combine RUN apt-get update with apt-get install / specifying a package version 指定安装的版本**
 
-4.  **CMD** : 构建容器后调用，也就是在容器启动时才进行调用。
+5.  **CMD** : 指定这个 container 启动的时候要运行的命令,只有最后一个会生效,可被替代
 
     ```
     格式：
@@ -203,7 +211,9 @@ No, it is not possible! **A container MUST be in the stopped state before we can
     　　 CMD 不同于 RUN，CMD 用于指定在容器启动时所要执行的命令，而 RUN 用于指定镜像构建时所要执行的命令。
     ```
 
-5.  **ADD / COPY** : 将本地文件添加到容器中
+6.  **ENTRYPOINT** : 指定这个容器启动的时侯要运行的命令,可以追加命令
+
+7.  **ADD / COPY** : 将本地文件添加到容器中
 
     - ADD: has some features like local-only tar extraction and remote URL support. tar 类型文件会自动解压(网络压缩资源不会被解压)，可以访问网络资源，类似 wget
     - COPY: only supports the basic copying of local files into the container. **ADD & COPY is functionally similar but COPY is preferred**
@@ -214,7 +224,9 @@ No, it is not possible! **A container MUST be in the stopped state before we can
     COPY . /tmp/
     ```
 
-    不要用 ADD 下载和解压，因为 image size matters, you should use curl or wget instead. **That way you can delete the files you no longer need after they’ve been extracted and you don’t have to add another layer in your image**. you should avoid doing things like:
+    不要用 ADD 下载和解压，因为 image size matters, you should use curl or wget instead.  
+    **That way you can delete the files you no longer need after they’ve been extracted and you don’t have to add another layer in your image**.  
+    you should avoid doing things like:
 
     ```
     ADD https://example.com/big.tar.xz /usr/src/things/
@@ -231,11 +243,32 @@ No, it is not possible! **A container MUST be in the stopped state before we can
         && make -C /usr/src/things all
     ```
 
-6.  EXPOSE : 指定于外界交互的端口
+8.  EXPOSE : 指定于外界交互的端口
 
-7.  ENV : 设置环境变量
+9.  ENV : 设置环境变量
 
-8.  ENTRYPOINT : 配置容器，使其可执行化。配合 CMD 可省去"application"，只使用参数。
+10. ENTRYPOINT : 配置容器，使其可执行化。配合 CMD 可省去"application"，只使用参数。
+
+## 11. bind-mount & volumn
+
+1. bind-mount
+
+`docker run -d -v <host system 要mount的文件的绝对路径>:container中的路径 --name <conatiner-name> <image-name>:<tag>`
+
+## 12. dangling image 虚悬镜像
+
+> 那些没有标签的镜像被称为悬虚镜像，在列表中展示为<none>:<none>。
+> 通常出现这种情况，是因为构建了一个新镜像，然后为该镜像打了一个已经存在的标签。当此情况出现，Docker 会构建新的镜像，然后发现已经有镜像包含相同的标签，接着 Docker 会移除旧镜像上面的标签，将该标签标在新的镜像之上。
+> 例如，首先基于 alpine:3.4 构建一个新的镜像，并打上 dodge:challenger 标签。
+> 然后更新 Dockerfile，将 alpine:3.4 替换为 alpine:3.5，并且再次执行 docker image build 命令。
+> 该命令会构建一个新的镜像，并且标签为 dodge:challenger，同时移除了旧镜像上面对应的标签，旧镜像就变成了悬虚镜像
+
+filer all dangling images
+`docker images -f dangling=true`
+delete all dangling images
+`docker rmi $(docker images -q -f dangling=true)` or `docker images prune`
+
+https://docs.docker.com/engine/reference/commandline/image_prune/
 
 ## 10. docker container vs hypervisor docker 容器和虚拟机的区别？
 

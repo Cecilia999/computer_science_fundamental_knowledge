@@ -44,7 +44,7 @@
 
    Every time you use a domain name, therefore, a DNS service must translate the name into the corresponding IP address. The Port number for DNS is 53.
 
-7. DHCP(Dynamic Host Configuration Protocol):
+7. **DHCP(Dynamic Host Configuration Protocol)**:
 
    It gives IP addresses to hosts. There is a lot of information a DHCP server can provide to a host when the host is registering for an IP address with the DHCP server. Port number for DHCP is 67, 68.
 
