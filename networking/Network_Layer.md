@@ -17,7 +17,7 @@ An IP address is a unique address that identifies a device on the internet or a 
 
 2. what is private IP address
 
-Private IP address are ip address that are not valid for use on the internet. If you want to access internet on these private IPs, you must have to use proxy server or NAT server.
+Private IP address are ip address that are not valid for use on the internet (you can not access over internet). It is used between LAN and assigned by LAN administrator. This private ip address is not regonized over internet. It is unique only in LAN.
 
 - classA: 10.0.0.0 - 10.255.255.255
 - classB: 172.16.0.0 - 172.31.255.255
@@ -25,7 +25,9 @@ Private IP address are ip address that are not valid for use on the internet. If
 
 3. what is public IP address
 
-   A public IP address is an address taken by the Internet Service Provider which facilitates(促进) you to communication on the internet.
+   A public IP address is regonized over the internet and is assigned by Internet Service Provider
+
+- class A-E
 
 4. special IP address
 
@@ -39,16 +41,16 @@ Private IP address are ip address that are not valid for use on the internet. If
 
 5. what is IPv4 address
 
-Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a total of 2^32 (or approximately 4 billion) possible IP addresses. These addresses are typically written in dotted-decimal notation, in which each byte of the address is written in its decimal form and is separated by a period (dot) from other bytes in the address. e.g: 127.255.255.255
+For IPv4, each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a total of 2^32 (or approximately 4 billion) possible IP addresses. These addresses are typically written in **dotted-decimal notation**, in which each byte of the address is written in its decimal form and is separated by a period (dot) from other bytes in the address. e.g: 127.255.255.255
 
 ### 1.1 IPv4 Addressing
 
 1. what is subnet
    A subnet is a logical subdivision of an IP network. e.g. consist of a few host inerface and a router interface interconnected in a Ethernet LAN forms a subnet.
 
-2. what is subnet mask
+2. what is subnet mask (network mask/subnet block)
 
-   A Subnet mask is a 32-bit number that masks an IP address, and divides the IP address into network address and host address. Subnet Mask is made by setting network bits to all "1"s and setting host bits to all "0"s. Within a given network, two host addresses are reserved for special purpose, and cannot be assigned to hosts. The "0" address is assigned a network address and "255" is assigned to a broadcast address, and they cannot be assigned to hosts.
+   A Subnet mask is a 32-bit number that masks an IP address divides the IP address into network address and host address. Subnet Mask is made by setting network bits to all "1"s and setting host bits to all "0"s. Within a given network, two host addresses are reserved for special purpose, and cannot be assigned to hosts. The "0" address is assigned a network address and "255" is assigned to a broadcast address, and they cannot be assigned to hosts.
 
 | Address Class | No of Network Bits | No of Host Bits | Subnet mask     | CIDR notation |
 | ------------- | ------------------ | --------------- | --------------- | ------------- |
@@ -72,7 +74,7 @@ Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a to
 IPv4 classes are differentiated based on the number of hosts it supports on the network. The types of IPv4 classes and are based on the network/subnet portions of an IP address, which were constrained to be 8, 16, or 24 bits in length.
 
 - class A support **16,581,375** large size network
-- class b support **65,536** medium size network
+- class B support **65,536** medium size network
 - class c support **256** small size network
 
 ![ipv4_classes1](../image/ipv4_classes.JPG)
@@ -97,17 +99,18 @@ With subnet addressing, the 32-bit IP address is divided into two parts and has 
 
 contact ISP to see if it is already allocated
 
-#### 4. obtain a host address - DHCP (Dynamic Host Configuration Protocol)
+#### 4. How to obtain a host address?/ How to obtain IP address with newly arrived device) - DHCP (Dynamic Host Configuration Protocol)
 
 1. What is DHCP? How does it works?
 
-   It stands for Dynamic Host Configuration Protocol, and allocates IP addresses, subnet masks and gateways to hosts. For a newly arriving host, the DHCP protocol is a four-step process:
+   It stands for Dynamic Host Configuration Protocol, and **allocates IP addresses, subnet masks, address of default gateways(also known as first-hop router) and local DNS server**. For a newly arriving host, the DHCP protocol is a **four-step** process (DHCP 一共有四步但只有最后两步是必须的):
 
-   - A host upon entering a network, broadcasts a message in search of a DHCP server (DHCP DISCOVER)
-   - An offer message is sent back by the DHCP server as a packet containing lease time, subnet mask, IP addresses, etc (DHCP OFFER)
-   - Depending on which offer accepted, the client sends back a reply broadcast letting all DHCP servers know (DHCP REQUEST)
-   - Server sends an acknowledgment (DHCP ACK)
-   - Once the client receives the DHCP ACK, the interaction is complete and the client can use the DHCP-allocated IP address for the lease duration.
+   1. **DHCP DISCOVER**: A host upon entering a network, broadcasts a message in search of a DHCP server(we assume DHCP server is inside router)
+   2. **DHCP OFFER**: An offer message is sent back by the DHCP server as a packet containing lease time, subnet mask, IP addresses, etc.
+   3. **DHCP REQUEST**: Depending on which offer accepted, the client sends back a reply broadcast letting all DHCP servers know
+   4. **DHCP ACK**: Server sends an acknowledgment (DHCP ACK)
+
+   Once the client receives the DHCP ACK, the interaction is complete and the client can use the DHCP-allocated IP address for the lease duration.
 
 2. Can you have two DHCP servers in the same network? How it works?
 

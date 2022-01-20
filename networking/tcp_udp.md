@@ -9,17 +9,40 @@
 
 ## 2. Reliable Transfer
 
-TCP 的可靠传输基本上都可以在 TCP 20B 的头部体现
+TCP is reliable and connetion-oriented protocol, which ensures that data is delivered from sending process to receiving process, correctly and in order.
 
-1、确认和超时重传：接收方收到报文就会确认，发送方发送一段时间后没有收到确认就超时重传，这个是依赖序号和确认号实现的。
+1. seq + ack + timer：接收方收到报文就会确认，发送方发送一段时间后没有收到确认就超时重传，这个是依赖序号和确认号实现的。
 
-2、数据校验：**checksum** 校验和
+2. data integrity：**checksum** 校验和
 
-3、连接管理：三次握手和四次挥手
+3. connection：three-way handshake / four-way handshake
 
-4、flow control 流量控制：通过滑动窗口机制，当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。
+4. **flow control 流量控制**
+   TCP will ensure that a sender is not overwhelming a receiver by sending packets faster than it can consume.
 
-5、congestion control 拥塞控制：通过拥塞窗口机制，当网络拥塞时，减少数据的发送。慢开始+拥塞避免，快恢复+快重传
+   TCP uses a **sliding window protocol** to control the number of bytes in flight it can have. In other words, the number of bytes that were sent but not yet ACKed.
+
+   - sender buffer: 可以发送但还没发送的
+   - receiver buffer: 已发送但还没 ACK 确认 的
+
+   **When Receiver send back ACK segment, it will contain its available Receive window size in the header of the TCP segment**
+
+   - when receiver finds out its buffer is almost full, it will set a smaller receive window size to notice sender to slow down the sending speed.
+   - when receiver window is full, receiver will set the available win = 0
+
+5. **congestion control 拥塞控制**
+   TCP will ensure that not too many sources sending too much data too fast for **network** to handle
+   通过 congestion window 机制，**slow start + AIMD**
+
+   1. set cwnd = 1 (congestion window)
+   2. slow start until hit the ssthreshold(slow start threshold)
+   3. additive increas to avoid congestion
+   4. multiplicative decrease
+
+   - timeout: set cwnd to 1 (congestion possibility is high)
+   - 3 times ACK: set cwnd to 1/2 (congestion possibility is less)
+
+   **When sender timer timeout or received 3 duplicated ACK, it means there is packet lost**
 
 ## 3. 流量控制 vs 拥塞控制
 
@@ -126,7 +149,9 @@ UDP 是面向数据报、无连接的，数据报发出去，就不保留数据�
 
 ### 1. 为什么连接的时候是三次握手，关闭的时候却是四次握手？
 
-### 2. 为什么 TIME_WAIT 状态需要经过 2MSL(最大报文段生存时间)才能返回到 CLOSE 状态？
+因为当 Server 端收到 Client 端的 SYN 连接请求报文后，可以直接发送 SYN+ACK 报文。其中 ACK 报文是用来应答的，SYN 报文是用来同步的。但是关闭连接时，当 Server 端收到 FIN 报文时，很可能并不会立即关闭 SOCKET，所以只能先回复一个 ACK 报文，告诉 Client 端，"你发的 FIN 报文我收到了"。只有等到我 Server 端所有的报文都发送完了，我才能发送 FIN 报文，因此不能一起发送。故需要四步握手。
+
+### 2. 为什么 TIME_WAIT 状态需要经过 2MSL(maxium segment lifetime)才能返回到 CLOSE 状态？
 
 防止最后一个 ACK 丢失
 
@@ -154,7 +179,7 @@ TCP 还设有一个 **keepalive** 计时器，客户端如果出现故障，服�
 
 服务器第一次收到客户端的 SYN 之后，就会处于 SYN_RCVD 状态，此时双方还没有完全建立其连接，服务器会把此种状态下请求连接放在一个队列里，我们把这种队列称之为半连接队列。当然还有一个全连接队列，就是已经完成三次握手，建立起连接的就会放在全连接队列中。如果队列满了就有可能会出现丢包现象。
 
-#### 5.1 简述 SYN 攻击
+#### 5.1 what is SYN attack
 
 SYN 攻击即利用 TCP 协议缺陷，通过发送大量的半连接请求，占用半连接队列，耗费 CPU 和内存资源。
 
