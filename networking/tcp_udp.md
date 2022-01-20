@@ -11,13 +11,14 @@
 
 TCP is reliable and connetion-oriented protocol, which ensures that data is delivered from sending process to receiving process, correctly and in order.
 
-1. seq + ack + timer：接收方收到报文就会确认，发送方发送一段时间后没有收到确认就超时重传，这个是依赖序号和确认号实现的。
+1. **reliable Transfer** = seq + ack + timer + checksum
 
-2. data integrity：**checksum** 校验和
+   - 接收方收到报文就会确认，发送方发送一段时间后没有收到确认就超时重传，这个是依赖序号和确认号实现的。
+   - data integrity：**checksum** 校验和
 
-3. connection：three-way handshake / four-way handshake
+2. **connection-oriented**：three-way handshake / four-way handshake
 
-4. **flow control 流量控制**
+3. **flow control 流量控制**
    TCP will ensure that a sender is not overwhelming a receiver by sending packets faster than it can consume.
 
    TCP uses a **sliding window protocol** to control the number of bytes in flight it can have. In other words, the number of bytes that were sent but not yet ACKed.
@@ -30,7 +31,7 @@ TCP is reliable and connetion-oriented protocol, which ensures that data is deli
    - when receiver finds out its buffer is almost full, it will set a smaller receive window size to notice sender to slow down the sending speed.
    - when receiver window is full, receiver will set the available win = 0
 
-5. **congestion control 拥塞控制**
+4. **congestion control 拥塞控制**
    TCP will ensure that not too many sources sending too much data too fast for **network** to handle
    通过 congestion window 机制，**slow start + AIMD**
 
