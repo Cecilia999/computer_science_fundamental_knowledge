@@ -1,13 +1,11 @@
-# Network Layer
+# Network Layer - Data Plane
 
 The transport layer provides various forms of process-to-process communication by relying on the network layer’s **host-to-host** communication service.
 
 1. The data plane is the part of the network that actually forwards the data/packets.
 2. The control plane is the part of the network that decides how to route and forward packets to a different location.
 
-# Data Plane
-
-## 1. IPv4
+## 1. IP
 
 1. what is IP address
 
@@ -177,4 +175,8 @@ To differenciate two different host in the private network to request the same d
 
 encapsulate ipv6 datagram into ipv4 datagram
 
-# Control Plane
+## 2. Overview of Network Layer
+
+### 1. Forwarding
+
+### 2. Routing

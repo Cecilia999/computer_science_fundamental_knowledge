@@ -14,27 +14,27 @@
 
 ## 3. https vs http 区别/优缺点
 
-1. 加密
+1. encryption
 
-   - **http 通信都是明文**，数据在客户端与服务器通信过程中，任何一点都可能被劫持。比如，发送了银行卡号和密码，hacker 劫取到数据，就能看到卡号和密码，这是很危险的。
-   - https 采用了非对称加密+对称加密的方式，即使数据被监听也不容易解密
+   - **http is plaintext**，数据在客户端与服务器通信过程中，任何一点都可能被劫持。比如，发送了银行卡号和密码，hacker 劫取到数据，就能看到卡号和密码，这是很危险的。
+   - https 采用了 symmetric encryption + asymetric encryotion 的方式，即使数据被监听也不容易解密
 
-2. 身份认证
+2. identity authentication
 
    - http 不验证通信方身份，可能遭到伪装
    - https 会在数据传输前进行 CA 证书验证。通信双方携带 CA 证书，CA 证书相当于身份证，有 CA 证书就认为合法，没有 CA 证书就认为非法，CA 证书由第三方颁布，很难伪造
 
-3. 数据完整性验证
+3. data integrity check
 
    - http 无法验证数据的完整性，如果数据的一部分被篡改，接受方无法得知
-   - https 使用 digital signature 数字签名来验证数据的完整性 (数字签名 = 非对称密钥加解密”+“数字摘要)
+   - https 使用 **digital signature** 数字签名来验证数据的完整性 (数字签名 = 非对称密钥加解密”+“数字摘要)
 
 4. **https 比 http 慢**
 
    - 加密解密耗时
    - 首次连接 http = tcp 握手，https = tcp 握手 + ssl 握手
 
-5. 缓存问题
+5. Cache
 
    出于安全考虑，浏览器不会在本地保存 HTTPS 缓存。实际上，只要在 HTTP 头中使用特定命令，HTTPS 是可以缓存的。Firefox 默认只在内存中缓存 HTTPS。但是，只要头命令中有 Cache-Control: Public，缓存就会被写到硬盘上。 IE 只要 http 头允许就可以缓存 https 内容，缓存策略与是否使用 HTTPS 协议无关。
 

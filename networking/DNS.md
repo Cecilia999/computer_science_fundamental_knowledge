@@ -8,18 +8,19 @@ Domain Name Systems(DNS) maps domain names With Internet Protocol(IP) address th
 
 ## 2. DNS lookup process/ how the dns query process work
 
-1. https://www.cloudflare.com/learning/dns/what-is-dns/
-2. https://www.freshersemploy.com/dns-interview-questions-answers/
-3. https://tutorialmastery.com/dns-interview-questions/
+1. https://phoenixnap.com/kb/what-is-domain-name-system-works
+2. https://tutorialmastery.com/dns-interview-questions/
 
 通过域名，最终得到该域名对应的 IP 地址的过程叫做域名解析
 ![alt text](../image/域名解析.jpg)
 
 ## 3. DNS server
 
-1. Local DNS server 本地域名服务器
+1. Local DNS cache 本机的域名 cache
 
-2. Root DNS servers 根域名服务器
+2. recursive DNS server 本地 ISP 的 DNS server
+
+3. Root DNS servers 根域名服务器
 
 全世界有多少根 DNS？ -->> 13 个，其中 10 个在美国，英国和瑞典各 1 个，日本 1 个。
 

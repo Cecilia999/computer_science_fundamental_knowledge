@@ -1,15 +1,30 @@
-# TCP (Transmission Control Protocol) VS UDP (User Datagram Protocol)
+# Transport LayerTCP (Transmission Control Protocol) VS UDP (User Datagram Protocol)
 
 ## Transport Layer
 
-## TCP
+### 1. multiplexing
 
-## 1. TCP segment structure 报文结构
+The job of gathering data chunks at the source host from different sockets, encapsulating each data chunk with header information (that will later be used in demultiplexing) to create segments, and passing the segments to the network layer is called multiplexing.
+
+multiplexing requires
+
+- each sockets have unique identifiers - **port number**
+- each segment have special fields that indicate the socket to which the segment is to be delivered.
+
+1. port number is 16 bits, 0~1023 is for well-know application protocols.
+
+### 2. demultiplexing
+
+This job of delivering the data in a transport-layer segment to the correct socket is called demultiplexing
+
+## TCP (Transmission Control Protocol)
+
+### 1. TCP segment structure 报文结构
 
 ![alt text](../image/tcp_segment_structure.jpg)
 ![alt text](../image/tcp_segment_structure2.jpg)
 
-## 2. TCP Reliable Transfer
+### 2. TCP Reliable Transfer
 
 TCP is reliable and connetion-oriented protocol, which ensures that data is delivered from sending process to receiving process, correctly and in order.
 
@@ -47,7 +62,7 @@ TCP is reliable and connetion-oriented protocol, which ensures that data is deli
 
    **When sender timer timeout or received 3 duplicated ACK, it means there is packet lost**
 
-## 3. 流量控制 vs 拥塞控制
+### 3. 流量控制 vs 拥塞控制
 
 看：
 
@@ -56,16 +71,16 @@ TCP is reliable and connetion-oriented protocol, which ensures that data is deli
 3. https://www.geeksforgeeks.org/tcp-congestion-control/ -->> https://www.youtube.com/watch?v=cPLDaypKQkU
 4. https://www.youtube.com/watch?v=4l2_BCr-bhw
 
-## 4. 三次握手四次挥手
+### 4. 三次握手四次挥手
 
 看：
 
 1. https://blog.csdn.net/qq_38950316/article/details/81087809
 2. https://www.youtube.com/watch?v=xMtP5ZB3wSk
 
-## 5. TCP sticking/unpacking 粘包，拆包及解决方法
+### 5. TCP sticking/unpacking 粘包，拆包及解决方法
 
-### 5.1 TCP does not preserves message boundaries 无边界保护
+#### 5.1 TCP does not preserves message boundaries 无边界保护
 
 看：
 https://programmer.ink/think/tcp-packet-sticking-unpacking.html
@@ -82,7 +97,7 @@ https://programmer.ink/think/tcp-packet-sticking-unpacking.html
 
 **注意 tcp 是不会丢包和失序的。**
 
-### 5.2 粘包、拆包表现形式
+#### 5.2 粘包、拆包表现形式
 
 现在假设客户端向服务端连续发送了两个数据包，用 msg1 和 msg2 来表示，那么服务端收到的数据可以分为三种，现列举如下
 
@@ -104,7 +119,7 @@ https://programmer.ink/think/tcp-packet-sticking-unpacking.html
 
 ![alt text](../image/拆包粘包3.jpg)
 
-### 5.3 发生粘包、拆包的原因
+#### 5.3 发生粘包、拆包的原因
 
 发生 TCP 粘包、拆包主要是由于下面一些原因：
 
@@ -115,7 +130,7 @@ https://programmer.ink/think/tcp-packet-sticking-unpacking.html
 
 最多的是以上四种情况，2 种情况粘包、2 种情况拆包
 
-### 5.4 粘包、拆包解决办法
+#### 5.4 粘包、拆包解决办法
 
 **TCP 本身是面向流(binary stream)的**，作为网络服务器，如何从这源源不断涌来的数据流中拆分出或者合并出有意义的信息呢？通常会有以下一些常用的方法：
 
@@ -125,26 +140,26 @@ https://programmer.ink/think/tcp-packet-sticking-unpacking.html
 
 3、可以在数据包之间设置边界，如添加特殊符号，这样，接收端通过这个边界就可以将不同的数据包拆分开。
 
-## 6. 延迟应答 & 捎带应答
+### 6. 延迟应答 & 捎带应答
 
 1. 延迟应答
    接收方收到数据之后可以并不立即返回确认应答，而是延迟一段时间的机制。
 2. 捎带应答
    TCP 包中既发送数据又发送确认应答的一种机制
 
-## UDP
+## UDP (User Datagram Protocol)
 
-## 1. udp 的特点 & segment structure 报文结构
+### 1. udp 的特点 & segment structure 报文结构
 
 ![alt text](../image/udp_segment_structure.jpg)
 
-1. udp 是 connectionless 无连接的，unreliable 不可靠的，尽最大可能交付。tcp 是 connection-oriented 的，reliable transfer。
-2. udp 的头部只有 8 byte，tcp 有 20byte
+1. udp is connectionless, unreliable transfer. It do its best effort to transfer packet. tcp 是 connection-oriented 的，reliable transfer。
+2. udp header lenth is only 8 byte，tcp 有 20byte
 3. UDP 连接没有 TCP 的三次握手、确认应答、超时重发、流量控制、拥塞控制等机制，而且 UDP 是一个无状态的传输协议，所以它在传递数据时非常快。
 4. udp 面向报文，tcp 面向字节流，所以 udp 不会有拆包粘包的问题
 5. udp 支持一对一、一对多、多对一和多对多的交互通信 half-duplex。tcp 是点对点的传输层协议
 
-## 2.为什么 UDP 不可靠
+### 2.为什么 UDP 不可靠
 
 UDP 是面向数据报、无连接的，数据报发出去，就不保留数据备份了。 仅仅在 IP 数据报头部加入校验和复用。 UDP 没有服务器和客户端的概念。 UDP 报文过长的话是交给 IP 切成小段，如果某段报废报文就废了。
 
