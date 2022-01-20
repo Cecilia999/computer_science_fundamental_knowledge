@@ -1,5 +1,7 @@
 # TCP (Transmission Control Protocol) VS UDP (User Datagram Protocol)
 
+## Transport Layer
+
 ## TCP
 
 ## 1. TCP segment structure 报文结构
@@ -7,7 +9,7 @@
 ![alt text](../image/tcp_segment_structure.jpg)
 ![alt text](../image/tcp_segment_structure2.jpg)
 
-## 2. Reliable Transfer
+## 2. TCP Reliable Transfer
 
 TCP is reliable and connetion-oriented protocol, which ensures that data is delivered from sending process to receiving process, correctly and in order.
 
@@ -176,11 +178,13 @@ UDP 是面向数据报、无连接的，数据报发出去，就不保留数据�
 
 TCP 还设有一个 **keepalive** 计时器，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为 2 小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔 75 秒钟发送一次。若一连发送 10 个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。
 
-### 5. 什么是半连接队列？
+### 5. 什么是半连接队列(SYN queue)？
 
-服务器第一次收到客户端的 SYN 之后，就会处于 SYN_RCVD 状态，此时双方还没有完全建立其连接，服务器会把此种状态下请求连接放在一个队列里，我们把这种队列称之为半连接队列。当然还有一个全连接队列，就是已经完成三次握手，建立起连接的就会放在全连接队列中。如果队列满了就有可能会出现丢包现象。
+服务器第一次收到客户端的 SYN 之后，就会处于 SYN_RCVD 状态，此时双方还没有完全建立其连接，服务器会把此种状态下请求连接放在一个队列里，我们把这种队列称之为半连接队列。当然还有一个全连接队列(**Accept queue**)，就是已经完成三次握手，建立起连接的就会放在全连接队列中。如果队列满了就有可能会出现丢包现象。
 
-#### 5.1 what is SYN attack
+#### 5.1 what is SYN flood attack
+
+看：https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/
 
 SYN 攻击即利用 TCP 协议缺陷，通过发送大量的半连接请求，占用半连接队列，耗费 CPU 和内存资源。
 
@@ -189,15 +193,11 @@ SYN 攻击即利用 TCP 协议缺陷，通过发送大量的半连接请求，�
 1. 缩短 SYN Timeout 时间
 2. 记录 IP，若连续受到某个 IP 的重复 SYN 报文，从这个 IP 地址来的包会被一概丢弃。
 
-This TCP connection management protocol sets the stage for a classic Denial of Service (DoS) attack known as the SYN flood attack. In this attack, the attacker(s) send a large number of TCP SYN segments, without completing the third handshake step. With this deluge of SYN segments, the server’s connection resources become exhausted as they are allocated (but never used!) for half-open connections; legitimate clients are then denied
-service.
+SYN flood attack is a type of DoS(denial of service) attack, which works sending a lots SYN segment to open TCP connection but without complete the 3-way handshake process. Leave a lots half-open connections exhausted sever resources as they are allocated (but never used!); Other clients are then denied service.
 
 Solution: SYN cookies
 
-When the server receives a SYN segment, it does not know if the segment is coming from a legitimate user or is part of a SYN flood attack. So, instead of creating a half-open TCP connection for this SYN, the server creates an initial TCP sequence number that is a complicated function (hash function) of source and destination IP addresses and port numbers of the SYN segment, as well as a secret number only known to the server. This carefully crafted initial sequence number is the so-called “cookie.” The server then sends
-the client a SYN_ACK packet with this special initial sequence number. Importantly, the
-server does not remember the cookie or any other state information corresponding to the
-SYN.
+When the server receives a SYN segment, it does not know if the segment is coming from a legitimate user or is part of a SYN flood attack. So, **instead of creating a half-open TCP connection for this SYN, the server creates an initial TCP sequence number that is a complicated function (hash function)** of source and destination IP addresses and port numbers of the SYN segment, as well as a secret number only known to the server. This carefully crafted initial sequence number is the so-called “cookie.” The server then sends the client a SYN_ACK packet with this special initial sequence number. Importantly, the server does not remember the cookie or any other state information corresponding to the SYN.
 
 ### 6. 网络中（服务器端）大量的 TIME_WAIT
 
@@ -239,18 +239,18 @@ net.ipv4.tcp_fin_timeout 修改系默认的 TIMEOUT 时间
 
 ### 7. 心跳包
 
-### 8.传输层有什么作用
+### 8.transport layer 有什么作用
 
 传输层提供了进程间的逻辑通信，传输层向高层用户屏蔽了下面网络层的核心细节，使应用程序看起来像是在两个传输层实体之间有一条端到端的逻辑通信信道
 
 1. 多路复用和分用。
 
-   - 复用：当传输层从应用程序接收报文后要封装在传输层的段中再交给网络层发送。
-   - 分用：当传输层从网络层接收数据后，必须将数据正确递交给某个应用程序。也就是传输层曾能够区分不同进程的数据并且加以区分处理。可靠数据传输，比如传输层的 TCP 协议，提供了面向连接的，可靠的，具有拥塞控制的协议，这是为了弥补网络层不足所建立的。
+   - multiplexing：当传输层从应用程序接收报文后要封装在传输层的段中再交给网络层发送。
+   - demultiplexing：当传输层从网络层接收数据后，必须将数据正确递交给某个应用程序。也就是传输层曾能够区分不同进程的数据并且加以区分处理。可靠数据传输，比如传输层的 TCP 协议，提供了面向连接的，可靠的，具有拥塞控制的协议，这是为了弥补网络层不足所建立的。
 
 2. 此外，传输层还有寻址的功能，定位应用程序在哪里。以及流量的控制，防止接收端速度太慢造成溢出和丢包的现象。流量控制和拥塞控制的区别是：流量控制只是端端之间，只需要管理两个端之间的流量传输即可，也就是局部的。但是拥塞控制是全局的，是整个网络所做的事情，需要所有的路由器主机一起努力完成的事情。在传输层，既有流量控制也有拥塞控制。
 
-### 9. video streaming -->> youtube streaming using tcp or udp
+### 9. video streaming - youtube streaming using tcp or udp
 
 ![alt_text](../image/video_streaming.jpg)
 
