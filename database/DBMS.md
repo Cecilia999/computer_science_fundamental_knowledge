@@ -96,23 +96,16 @@ A relationship in database is established when one table has a foreign key that 
 
 ## 10. what is join? Mention its types.
 
-Join depicts the relationship between two or more tables. Join is used/is refering to combine different table rows by using a column/field that is common to each of the tables.
+Join describe/depicts the relationship between two or more tables. Join is used/is refering to combine different table rows by using a column/field that is common to each of the tables.
 
-1. inner join: (default join) return rows from both tables that satisfy the given condition.
+1. (INNER) JOIN: Returns records that have matching values in both tables
+2. LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+3. RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+4. FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
 
-2. outter join
+5. cross join： Cross join can be defined as a cartesian product of the two tables included in the join.
 
-   - left join:
-     The LEFT JOIN clause select all the rows in left table and matches each row from the right table based on the condition of the ON clause. It would return all the rows in the left table even there is no match to be found in the right table (with NULL in each column from the right table).
-
-   - right join:
-     same as left join but reversely
-   - full join:
-     combines the results of both left and right outer joins. The joined table will contain all records from both the tables and fill in NULL values for missing matches on either side.
-
-3. cross join： Cross join can be defined as a cartesian product of the two tables included in the join.
-
-4. natural join: combines tables based on columns with the same name and data type.
+6. natural join: combines tables based on columns with the same name and data type.
 
 https://learnsql.com/blog/sql-join-interview-questions-with-answers/
 

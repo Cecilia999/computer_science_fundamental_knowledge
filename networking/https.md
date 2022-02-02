@@ -4,7 +4,7 @@
 
 **HTTPS = HTTP + encryption + authentication + integrity**
 
-通过在在 HTTP 下加入 SSL(Secure Socket Laryer)/TLS(Transfer Layer Security) 层实现，SSL/TLS 是独立于 HTTP 的协议。
+Combine HTTP with SSL(Secure Socket Laryer)/TLS(Transfer Layer Security) protocol，SSL/TLS 是独立于 HTTP 的协议。
 
 ## 2. https 的作用
 
@@ -17,7 +17,7 @@
 1. encryption
 
    - **http is plaintext**，数据在客户端与服务器通信过程中，任何一点都可能被劫持。比如，发送了银行卡号和密码，hacker 劫取到数据，就能看到卡号和密码，这是很危险的。
-   - https 采用了 symmetric encryption + asymetric encryotion 的方式，即使数据被监听也不容易解密
+   - **https is cyphertext** 采用了 symmetric encryption + asymetric encryotion 的方式，即使数据被监听也不容易解密
 
 2. identity authentication
 
@@ -54,16 +54,25 @@
 
 ### 5.2 对称加密（AES、DES、PBE） vs 非对称加密（RSA）
 
-1. 对称加密(也叫**私钥**加密、共享密钥加密)
+1. symmetric encryption / private key encryption
+
+   use the same private key to encrypt and decrypt information.
 
    指加密和解密使用相同密钥的加密算法。即信息的发送方和接收方使用同一个密钥去加密和解密数据。对称加密的特点是算法公开、加密和解密速度快，适合于对大数据量进行加密。缺点是如果 hacker 拿到 private key 就可以解密盗取/篡改。
+
+   常见的：DES（Data Encryption Standard）、AES（Advanced Encryption Standard）、RC4、IDEA
 
    **对称加密过程**
 
    - 加密过程：明文 + 加密算法 + 私钥 => 密文
    - 解密过程：密文 + 解密算法 + 私钥 => 明文
 
-2. 非对称加密(也叫公钥加密)
+2. asymmetric encryption / public key encryption (public key cryptography)
+
+   use a pair of public key + private key : s
+
+   - ender use receiver's public key to encrypt
+   - receiver use its own private key to decrypt
 
    与对称加密算法不同，非对称加密算法需要两个密钥：公开密钥（publickey）和私有密钥（privatekey）。发送放用接受方的公钥加密，接受方用自己的私钥解密。非对称加密的缺点是加密和解密花费时间长、速度慢，只适合对少量数据进行加密。还有一个问题是如果不进行身份验证，hacker 伪装成接收方把自己的公钥发给发送方，也可以盗取信息。
 
@@ -84,6 +93,8 @@
 - DSA(Digital Signature Algorithm，数字签名)
 
 4. **https 采用的是用非对称加密进行身份验证，用对称加密进行数据传输**
+
+HTTPS use asymmetric encryption to identify end-point and exchange private key
 
 SSL 协议在握手阶段使用的是非对称加密，在传输阶段使用的是对称加密。因为非对称加密算法非常耗时，速度很慢，这种混合加密方式平衡了对称和非对称加密的优缺点
 
